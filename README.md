@@ -1,196 +1,375 @@
-# TRUCKWAY
+# Truckway — README do Projeto
 
-Projeto desenvolvido para a FETIN 2026.
+## Visão geral
 
-O Truckway é uma plataforma web em formato PWA voltada para caminhoneiros, com foco em:
-- rotas seguras;
-- restrições para caminhões;
-- balanças;
-- pontos de apoio;
-- avaliações da comunidade.
+O **Truckway** é um projeto da equipe para a **FETIN 2026**, com foco em caminhoneiros. A ideia é criar um site com aparência de aplicativo (PWA), que ajude na navegação com rotas mais seguras, pontos de apoio, balanças e avaliações feitas por outros motoristas.
+
+A prioridade do projeto é construir um **MVP simples, funcional e bem organizado**, sem depender de frameworks neste primeiro momento.
 
 ---
 
-# Estrutura do Projeto
+## Objetivo do MVP
 
-## index.html
+Nesta primeira versão, o projeto deve entregar:
+
+* uma **tela inicial** com identidade visual do Truckway;
+* uma área para **planejar rota**;
+* uma área de **mapa**;
+* uma seção de **pontos de apoio**;
+* uma seção de **avaliações**;
+* uma página/seção **Sobre**;
+* estrutura pronta para virar **PWA**.
+
+Nem tudo precisa estar pronto de forma completa agora. O foco é ter uma base organizada para crescer depois.
+
+---
+
+## Como a aplicação vai funcionar
+
+A ideia é usar um **layout fixo** no `index.html` com:
+
+* cabeçalho no topo;
+* menu lateral;
+* área central (`main`) para trocar o conteúdo das páginas;
+* barra de navegação inferior;
+* conteúdo carregado dinamicamente por JavaScript.
+
+As telas principais ficarão separadas dentro da pasta `paginas/`, e cada uma terá um arquivo JavaScript próprio para facilitar o trabalho em equipe.
+
+---
+
+## Estrutura do projeto
+
+```txt
+truckway/
+├── index.html
+├── manifest.json
+├── service-worker.js
+├── README.md
+│
+├── assets/
+│   ├── icones/
+│   ├── imagens/
+│   └── logo/
+│
+├── css/
+│   ├── global.css
+│   ├── inicio.css
+│   ├── rota.css
+│   ├── mapa.css
+│   ├── apoio.css
+│   ├── avaliacoes.css
+│   └── sobre.css
+│
+├── js/
+│   ├── principal.js
+│   ├── roteador.js
+│   ├── interface.js
+│   ├── dados.js
+│   ├── mapas.js
+│   ├── pwa.js
+│   └── paginas/
+│       ├── inicio.js
+│       ├── rota.js
+│       ├── mapa.js
+│       ├── apoio.js
+│       ├── avaliacoes.js
+│       └── sobre.js
+│
+└── paginas/
+    ├── inicio.html
+    ├── rota.html
+    ├── mapa.html
+    ├── apoio.html
+    ├── avaliacoes.html
+    └── sobre.html
+```
+
+---
+
+## Explicação de cada pasta e arquivo
+
+### `index.html`
+
 Arquivo principal da aplicação.
 
 Responsável por:
-- estrutura base do site;
-- carregamento dos estilos;
-- carregamento dos scripts;
-- áreas principais da interface.
+
+* manter a estrutura base do site;
+* carregar o cabeçalho, menu lateral e navegação inferior;
+* abrir o conteúdo central dentro de um `<main>`;
+* chamar os arquivos CSS e JS principais.
+
+**Importante:** o `index.html` não deve ficar gigante. Ele serve como a moldura do projeto.
 
 ---
 
-## manifest.json
+### `manifest.json`
+
 Arquivo de configuração do PWA.
 
 Define:
-- nome do aplicativo;
-- ícones;
-- cores;
-- comportamento de instalação;
-- modo de exibição.
+
+* nome do aplicativo;
+* nome curto;
+* cores do tema;
+* ícones;
+* modo de exibição.
 
 ---
 
-## service-worker.js
-Responsável pelo funcionamento offline e cache do PWA.
+### `service-worker.js`
 
-Funções:
-- cache de arquivos;
-- carregamento rápido;
-- suporte offline básico.
+Arquivo responsável por recursos de PWA, como:
 
----
-
-# Pasta assets/
-
-Armazena arquivos visuais do projeto.
-
-## assets/icones/
-Ícones utilizados na interface.
-
-## assets/imagens/
-Imagens gerais do sistema.
-
-## assets/logo/
-Logo oficial do projeto.
+* cache básico;
+* carregamento mais rápido;
+* suporte inicial a funcionamento offline.
 
 ---
 
-# Pasta css/
+### Pasta `assets/`
 
-## estilo.css
-Arquivo principal de estilos.
+Guarda arquivos visuais do projeto.
 
-Responsável por:
-- layout;
-- responsividade;
-- cores;
-- animações;
-- aparência geral.
+#### `assets/icones/`
+
+Ícones usados na interface.
+
+#### `assets/imagens/`
+
+Imagens gerais, ilustrações e elementos visuais.
+
+#### `assets/logo/`
+
+Logo oficial do Truckway.
 
 ---
 
-# Pasta js/
+### Pasta `css/`
 
-## principal.js
+Contém os estilos do projeto.
+
+#### `global.css`
+
+Estilos gerais do site: cores, fontes, espaçamento, componentes base.
+
+#### `inicio.css`
+
+Estilos específicos da tela inicial.
+
+#### `rota.css`
+
+Estilos da tela de planejamento de rota.
+
+#### `mapa.css`
+
+Estilos da tela do mapa.
+
+#### `apoio.css`
+
+Estilos da tela de pontos de apoio.
+
+#### `avaliacoes.css`
+
+Estilos da tela de avaliações.
+
+#### `sobre.css`
+
+Estilos da página sobre o projeto.
+
+---
+
+### Pasta `js/`
+
+Contém toda a lógica da aplicação.
+
+#### `principal.js`
+
 Arquivo principal do JavaScript.
 
 Responsável por:
-- iniciar o sistema;
-- carregar a aplicação;
-- conectar os módulos.
 
----
+* iniciar o site;
+* chamar o roteador;
+* carregar a página inicial;
+* conectar os módulos.
 
-## roteador.js
-Controla a navegação entre páginas/abas.
+#### `roteador.js`
+
+Controla a navegação entre as telas.
 
 Responsável por:
-- trocar telas;
-- renderizar páginas;
-- atualizar conteúdo principal.
 
----
+* trocar o conteúdo do centro da página;
+* carregar os fragmentos HTML;
+* responder aos cliques da barra inferior e do menu.
 
-## interface.js
-Funções visuais reutilizáveis.
+#### `interface.js`
 
-Exemplos:
-- criação de cards;
-- alertas;
-- componentes;
-- elementos dinâmicos.
-
----
-
-## dados.js
-Armazena dados simulados do MVP.
+Funções reutilizáveis de interface.
 
 Exemplos:
-- pontos de apoio;
-- balanças;
-- avaliações;
-- rotas;
-- alertas.
 
----
+* montar cards;
+* criar botões;
+* renderizar listas;
+* mostrar alertas.
 
-## mapas.js
-Responsável pela integração com mapas.
+#### `dados.js`
 
-Funções:
-- localização;
-- renderização do mapa;
-- controle de rotas;
-- marcadores.
-
----
-
-## pwa.js
-Funções relacionadas ao PWA.
+Dados simulados do MVP.
 
 Exemplos:
-- registro do service worker;
-- instalação do app;
-- futuras notificações.
+
+* pontos de apoio;
+* balanças;
+* avaliações;
+* alertas;
+* rotas sugeridas.
+
+#### `mapas.js`
+
+Arquivo reservado para a lógica de mapas.
+
+Pode conter:
+
+* integração com API de mapas;
+* exibição de marcadores;
+* cálculo visual de rota;
+* localização aproximada.
+
+#### `pwa.js`
+
+Funções relacionadas ao comportamento de PWA.
+
+Exemplos:
+
+* registrar service worker;
+* preparar instalação;
+* futuramente lidar com notificações.
 
 ---
 
-# Pasta paginas/
+### Pasta `js/paginas/`
 
-Contém as telas principais do sistema.
+Contém scripts específicos de cada tela.
 
-## inicio.js
-Tela inicial do aplicativo.
+#### `inicio.js`
 
----
+Lógica da tela inicial.
 
-## rota.js
-Tela de planejamento de rota.
+#### `rota.js`
 
----
+Lógica da tela de planejamento de rota.
 
-## mapa.js
-Tela principal de navegação e visualização do trajeto.
+#### `mapa.js`
 
----
+Lógica da tela de mapa.
 
-## apoio.js
-Tela de pontos de apoio e balanças.
+#### `apoio.js`
 
----
+Lógica da tela de pontos de apoio.
 
-## avaliacoes.js
-Tela de avaliações dos usuários.
+#### `avaliacoes.js`
 
----
+Lógica da tela de avaliações.
 
-## sobre.js
-Tela institucional do projeto.
+#### `sobre.js`
 
-Informações:
-- objetivo;
-- equipe;
-- tecnologias;
-- visão futura.
+Lógica da página sobre o projeto.
 
 ---
 
-# Tecnologias Utilizadas
+### Pasta `paginas/`
 
-- HTML5
-- CSS
-- JavaScript
-- PWA
-- API de mapas (futura integração)
+Contém o conteúdo de cada tela em HTML parcial.
+
+Esses arquivos **não** precisam ter estrutura completa de HTML (`<html>`, `<head>`, `<body>`), porque serão carregados dentro do conteúdo principal do `index.html`.
+
+#### `inicio.html`
+
+Conteúdo da tela inicial.
+
+#### `rota.html`
+
+Conteúdo da tela de rota.
+
+#### `mapa.html`
+
+Conteúdo da tela de mapa.
+
+#### `apoio.html`
+
+Conteúdo da tela de pontos de apoio.
+
+#### `avaliacoes.html`
+
+Conteúdo da tela de avaliações.
+
+#### `sobre.html`
+
+Conteúdo da página sobre o projeto.
 
 ---
 
-# Objetivo do MVP
+## Organização sugerida para a equipe
 
-Entregar uma aplicação funcional e demonstrável para a FETIN, validando a proposta do Truckway de forma simples, organizada e escalável.
+Como a equipe tem 4 pessoas, uma divisão possível é:
+
+* **Pessoa 1:** estrutura do projeto e integração geral;
+* **Pessoa 2:** HTML/CSS da tela inicial e layout base;
+* **Pessoa 3:** páginas de rota, mapa e apoio;
+* **Pessoa 4:** avaliações, dados simulados e PWA.
+
+Essa divisão pode ser ajustada conforme o nível de cada integrante.
+
+---
+
+## Padrão de trabalho recomendado
+
+1. Primeiro definir a estrutura das páginas.
+2. Depois montar o `index.html` como moldura fixa.
+3. Em seguida criar os fragmentos de cada página.
+4. Depois aplicar o CSS.
+5. Por fim conectar a navegação com JavaScript.
+
+---
+
+## Regras importantes
+
+* manter os nomes dos arquivos padronizados;
+* evitar criar arquivos gigantes;
+* separar responsabilidade por arquivo;
+* deixar o código fácil para iniciantes entenderem;
+* não tentar implementar tudo de uma vez.
+
+---
+
+## Ideia principal do projeto
+
+O Truckway existe para ajudar caminhoneiros com:
+
+* rotas mais seguras;
+* localização de apoio;
+* consulta de balanças;
+* avaliações de locais;
+* experiência prática em formato de aplicativo.
+
+---
+
+## Próximos passos
+
+Depois de organizar essa base, o próximo passo é criar:
+
+1. o `index.html` com layout fixo;
+2. a página inicial (`inicio.html`);
+3. o CSS global;
+4. a navegação entre páginas;
+5. os dados simulados.
+
+---
+
+## Observação final
+
+Este projeto está sendo construído de forma gradual. A prioridade agora é **clareza, organização e facilidade de manutenção**, para que toda a equipe consiga entender e contribuir.
