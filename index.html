@@ -74,33 +74,37 @@
     <div class="overlay" id="overlay" hidden></div>
 
     <main id="conteudo" class="conteudo" tabindex="-1" aria-live="polite">
-      <section class="estado-inicial">
-        <p class="estado-inicial__etiqueta">Truckway</p>
-        <h1>Carregando a experiência inicial...</h1>
-        <p>
-          O conteúdo principal será carregado aqui pelo JavaScript, mantendo o cabeçalho e a navegação fixos.
-        </p>
-      </section>
+        <!-- O conteúdo das páginas será carregado aqui dinamicamente -->
+         <!-- Exemplo de conteúdo inicial -->
+          <h1> Site aberto </h1>
     </main>
 
     <nav class="barra-inferior" aria-label="Navegação principal">
       <button class="item-barra item-barra--ativo" type="button" data-pagina="inicio" aria-current="page">
-        <span class="item-barra__icone" aria-hidden="true">⌂</span>
+        <span class="item-barra__icone home" aria-hidden="true">
+          <img src="conteudos/icones/home.png" alt="icone de home">
+        </span>
         <span>Início</span>
       </button>
 
       <button class="item-barra" type="button" data-pagina="rota">
-        <span class="item-barra__icone" aria-hidden="true">↗</span>
+        <span class="item-barra__icone rota" aria-hidden="true">
+          <img src="conteudos/icones/rota.png" alt="icone de rota">
+        </span>
         <span>Rota</span>
       </button>
 
       <button class="item-barra" type="button" data-pagina="mapa">
-        <span class="item-barra__icone" aria-hidden="true">◉</span>
+        <span class="item-barra__icone mapa" aria-hidden="true">
+          <img src="conteudos/icones/brasil.png" alt="icone de mapa">
+        </span>
         <span>Mapa</span>
       </button>
 
       <button class="item-barra" type="button" data-pagina="apoio">
-        <span class="item-barra__icone" aria-hidden="true">✦</span>
+        <span class="item-barra__icone apoio" aria-hidden="true">
+          <img src="conteudos/icones/apoio.png" alt="icone de apoio">
+        </span>
         <span>Apoio</span>
       </button>
     </nav>

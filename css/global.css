@@ -105,6 +105,8 @@ a {
 
 .botao-icone:hover {
   background: rgba(255, 255, 255, 0.12);
+  transform: scale(1.1) translateY(-0.1rem);
+  filter: invert(100%);
 }
 
 /* Ícone padrão */
@@ -292,6 +294,7 @@ a {
 
 .menu-lateral__link:hover {
   background: #e5e7eb;
+  transform: scale(1.1) translateY(-0.1rem);
 }
 
 /* =========================
@@ -320,48 +323,9 @@ a {
 /* =========================
    ESTADO INICIAL
 ========================= */
-.estado-inicial {
-  padding: 2rem;
 
-  border: 1px solid var(--cor-borda);
-  border-radius: 24px;
 
-  background: var(--cor-superficie);
-
-  box-shadow: var(--sombra);
-}
-
-.estado-inicial__etiqueta {
-  display: inline-block;
-
-  margin-bottom: 1rem;
-  padding: 0.4rem 0.8rem;
-
-  border-radius: 999px;
-
-  background: rgba(12, 97, 235, 0.1);
-  border: 1px solid rgba(12, 97, 235, 0.2);
-
-  color: var(--cor-primaria);
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-.estado-inicial h1 {
-  margin-bottom: 1rem;
-
-  font-size: 1.8rem;
-  line-height: 1.2;
-
-  color: var(--cor-texto-escuro);
-}
-
-.estado-inicial p {
-  line-height: 1.6;
-  color: var(--cor-texto-secundario);
-}
-
-/* =========================
+/* =========================  
    BARRA INFERIOR
 ========================= */
 .barra-inferior {
@@ -401,8 +365,43 @@ a {
 }
 
 .item-barra__icone {
-  font-size: 1.8rem; /* aumentado */
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-barra:hover{
+  filter: invert(100%);
+  transform: scale(1.1) translateY(-0.1rem);
+}
+
+.home img {
+  margin-top: 0.4rem;
+  width: 1.3rem;
+  height: 1.3rem;
+  display: block;
+  filter: invert(100%);
+}
+.rota img{
+  margin-top: 0.3rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  filter: invert(100%);
+}
+.mapa img {
+  margin-top: 0.2rem;
+  width: 1.5rem;
+  height: 1.6rem;
+  display: block;
+  filter: invert(100%);
+}
+.apoio img {
+  margin-top: 0.1rem;
+  margin-bottom: -0.2rem;
+  width: 2rem;
+  height: 2rem;
+  display: block;
+  filter: invert(100%);
 }
 
 .item-barra span:last-child {
@@ -413,6 +412,11 @@ a {
 .item-barra:hover,
 .item-barra--ativo {
   color: var(--cor-texto-claro);
+  transform: scale(1.1) translateY(-0.1rem);
+}
+
+.item-barra--ativo img{
+  filter: invert(100%) drop-shadow(0 0 2px var(--cor-texto-claro));   
 }
 
 /* =========================

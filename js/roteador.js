@@ -49,6 +49,12 @@ botoes.forEach((botao) => {
   botao.addEventListener("click", () => {
     const pagina = botao.dataset.pagina;
     carregarPagina(pagina);
+    botao.classList.add("item-barra--ativo");
+    botoes.forEach((b) => {
+      if (b !== botao) {
+        b.classList.remove("item-barra--ativo");
+      }
+    });
   });
 });
 
