@@ -26,3 +26,32 @@ fecharMenu.addEventListener("click", fecharMenuLateral);
 overlay.addEventListener("click", fecharMenuLateral);
 
 // ------------------------------
+
+
+// -----------------------------------------------
+// -------- PAGINAÇÃO (mudança de paginas) --------
+// -----------------------------------------------
+const conteudo = document.getElementById("conteudo");
+const botoes = document.querySelectorAll("[data-pagina]");
+
+async function carregarPagina(nomePagina) {
+  const resposta = await fetch(`paginas/${nomePagina}.html`);
+  const html = await resposta.text();
+
+  conteudo.innerHTML = html;
+
+  if (typeof fecharMenuLateral === "function") {
+    fecharMenuLateral();
+  }
+}
+
+botoes.forEach((botao) => {
+  botao.addEventListener("click", () => {
+    const pagina = botao.dataset.pagina;
+    carregarPagina(pagina);
+  });
+});
+
+carregarPagina("inicio");
+
+// ------------------------------
