@@ -374,3 +374,6 @@ Depois de organizar essa base, o próximo passo é criar:
 ## Observação final
 
 Este projeto está sendo construído de forma gradual. A prioridade agora é **clareza, organização e facilidade de manutenção**, para que toda a equipe consiga entender e contribuir.
+
+
+# teste commit
