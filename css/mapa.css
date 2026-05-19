@@ -1,41 +1,255 @@
-/* Layout da tela de mapa */
+/* ============================================================
+   mapa.css — Truckway
+   Estilos da aba de mapa:
+     • Wrapper que ocupa o espaço entre header e barra inferior
+     • Barra de busca flutuante
+     • Overlay de carregamento
+     • Pin customizado de geolocalização (ponto + pulso)
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────
+   Wrapper principal
+   Position fixed para ocupar exatamente o
+   espaço entre o header e a barra inferior,
+   ignorando o padding do .conteudo.
+───────────────────────────────────────── */
 .mapa-wrapper {
-    position: relative;
-    width: 100%;
-    /* 156px é a soma do header + nav inferior */
-    height: calc(100vh - 156px);
-    overflow: hidden;
+  position: fixed;
+  top: var(--altura-cabecalho);
+  left: 0;
+  right: 0;
+  bottom: var(--altura-barra-inferior);
+  z-index: 1;
+  overflow: hidden;
 }
 
-/* Barra de pesquisa flutuante */
+
+/* ─────────────────────────────────────────
+   Container do Leaflet
+───────────────────────────────────────── */
+#mapa-container {
+  width: 100%;
+  height: 100%;
+  background: #e8e0d8;   /* cor neutra enquanto os tiles carregam */
+}
+
+
+/* ─────────────────────────────────────────
+   Barra de busca flutuante
+───────────────────────────────────────── */
 .busca-mapa {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    
-    display: flex;
-    align-items: center;
-    width: 92%;
-    max-width: 420px;
-    padding: 12px 20px;
-    
-    background: #fff;
-    border-radius: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 0;
+
+  width: 92%;
+  max-width: 420px;
+
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14);
+
+  overflow: hidden;    /* garante que o botão não vaze do border-radius */
 }
 
 .busca-mapa input {
-    flex: 1;
-    border: 0;
-    outline: 0;
-    font-size: 16px; /* Evita zoom automático */
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--cor-texto-escuro);
+  background: transparent;
 }
 
-/* Container do Leaflet */
-#mapa-container {
-    width: 100%;
-    height: 100%;
-    background: #f0f0f0;
+.busca-mapa input::placeholder {
+  color: var(--cor-texto-secundario);
 }
+
+/* Botão de busca */
+.busca-mapa button {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: var(--cor-primaria);
+  color: #fff;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background var(--transicao);
+}
+
+.busca-mapa button:hover {
+  background: #0a52c8;
+}
+
+.busca-mapa button:active {
+  background: #0845a8;
+}
+
+
+/* ─────────────────────────────────────────
+   Overlay de carregamento
+───────────────────────────────────────── */
+.mapa-carregando {
+  position: absolute;
+  inset: 0;
+  z-index: 900;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(4px);
+
+  color: var(--cor-texto-secundario);
+  font-size: 0.9rem;
+}
+
+.mapa-carregando[hidden] {
+  display: none;
+}
+
+.mapa-carregando__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(12, 97, 235, 0.2);
+  border-top-color: var(--cor-primaria);
+  border-radius: 50%;
+  animation: girar 0.75s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ─────────────────────────────────────────
+   Pin de geolocalização do usuário
+   Estrutura:
+     .pin-usuario
+       .pin-usuario__pulso   ← anel que expande e some
+       .pin-usuario__ponto   ← círculo sólido central
+───────────────────────────────────────── */
+.pin-usuario {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.pin-usuario__pulso {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(12, 97, 235, 0.25);
+  animation: pulso 2s ease-out infinite;
+}
+
+.pin-usuario__ponto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+
+  background: var(--cor-primaria);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(12, 97, 235, 0.5);
+}
+
+@keyframes pulso {
+  0%   { transform: scale(0.4); opacity: 0.8; }
+  70%  { transform: scale(1.8); opacity: 0;   }
+  100% { transform: scale(1.8); opacity: 0;   }
+}
+
+
+/* fim */
+
+
+/* ─────────────────────────────────────────
+   Pins de POI (postos e balanças)
+───────────────────────────────────────── */
+.pin-poi {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2.5px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.pin-poi:hover { transform: scale(1.15); }
+
+.pin-poi--posto   { background: #fff7ed; }
+.pin-poi--balanca { background: #f0f9ff; }
+
+/* Balança inativa fica mais apagada */
+.pin-poi--inativo { opacity: 0.5; filter: grayscale(1); }
+
+
+/* ─────────────────────────────────────────
+   Popups dos POIs
+───────────────────────────────────────── */
+.popup-poi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 180px;
+  font-size: 0.85rem;
+}
+
+.popup-poi strong {
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.popup-poi p {
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.popup-poi__rodovia {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--cor-primaria);
+  padding: 1px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.popup-poi__estrelas {
+  color: #d97706;
+  font-size: 0.8rem;
+}
+
+.popup-poi__status        { font-size: 0.8rem; font-weight: 600; }
+.popup-poi__status--ok    { color: #16a34a; }
+.popup-poi__status--off   { color: #9ca3af; }
