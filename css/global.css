@@ -370,7 +370,7 @@ a {
   justify-content: center;
 }
 .item-barra:hover{
-  filter: invert(100%);
+  color: var(--cor-texto-claro);
   transform: scale(1.1) translateY(-0.1rem);
 }
 
@@ -416,7 +416,7 @@ a {
 }
 
 .item-barra--ativo img{
-  filter: invert(100%) drop-shadow(0 0 2px var(--cor-texto-claro));   
+  filter: invert(100%) drop-shadow(0 0 4px var(--cor-texto-claro));   
 }
 
 /* =========================
