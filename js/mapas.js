@@ -289,5 +289,9 @@
   }
 
   _registrar();
+  // Expõe função de inicialização compatível com o roteador
+  if (typeof window !== "undefined") {
+    window.inicializarMapa = _hookMapa;
+  }
 
 })();
