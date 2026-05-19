@@ -443,6 +443,7 @@ a {
   }
 
   .barra-inferior {
+    /* Comportamento original: barra compacta e centralizada em telas maiores */
     width: 420px;
     left: 50%;
     transform: translateX(-50%);

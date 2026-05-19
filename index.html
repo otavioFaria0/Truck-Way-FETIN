@@ -59,4 +59,46 @@
 
         <nav class="menu-lateral__nav" aria-label="Navegação secundária">
           <button class="menu-lateral__link" type="button" data-pagina="inicio">Início</button>
-          <button class="menu
+          <button class="menu-lateral__link" type="button" data-pagina="rota">Planejar Rota</button>
+          <button class="menu-lateral__link" type="button" data-pagina="mapa">Mapa</button>
+          <button class="menu-lateral__link" type="button" data-pagina="apoio">Pontos de Apoio</button>
+          <button class="menu-lateral__link" type="button" data-pagina="avaliacoes">Avaliações</button>
+          <button class="menu-lateral__link" type="button" data-pagina="sobre">Sobre</button>
+        </nav>
+      </aside>
+
+      <div id="overlay" class="overlay" hidden></div>
+
+      <main id="conteudo" class="conteudo"></main>
+
+      <noscript class="aviso-noscript">Este site requer JavaScript para funcionar corretamente.</noscript>
+    </div>
+
+    <footer class="barra-inferior" role="navigation" aria-label="Barra inferior">
+      <button class="item-barra home" type="button" data-pagina="inicio">
+        <span class="item-barra__icone"><img src="conteudos/icones/home.png" alt="Início"/></span>
+        <span>Início</span>
+      </button>
+
+      <button class="item-barra rota" type="button" data-pagina="rota">
+        <span class="item-barra__icone"><img src="conteudos/icones/rota.png" alt="Rota"/></span>
+        <span>Rota</span>
+      </button>
+
+      <button class="item-barra mapa" type="button" data-pagina="mapa">
+        <span class="item-barra__icone"><img src="conteudos/icones/brasil.png" alt="Mapa"/></span>
+        <span>Mapa</span>
+      </button>
+
+      <button class="item-barra apoio" type="button" data-pagina="apoio">
+        <span class="item-barra__icone"><img src="conteudos/icones/apoio.png" alt="Apoio"/></span>
+        <span>Apoio</span>
+      </button>
+    </footer>
+
+    <script src="js/dados.js"></script>
+    <script src="js/roteador.js"></script>
+    <script src="js/pwa.js" defer></script>
+    <script src="js/principal.js" defer></script>
+  </body>
+</html>
