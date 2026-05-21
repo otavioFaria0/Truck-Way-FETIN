@@ -346,8 +346,26 @@
     );
   }
 
+  function _ativarNavegacaoPreview() {
+    const preview = document.getElementById("inicio-mapa-preview");
+    if (!preview) return;
+
+    function navegarMapa() {
+      window.Roteador?.ir("mapa");
+    }
+
+    preview.addEventListener("click", navegarMapa);
+    preview.addEventListener("keydown", (evento) => {
+      if (evento.key === "Enter" || evento.key === " ") {
+        evento.preventDefault();
+        navegarMapa();
+      }
+    });
+  }
+
   function _hookInicio() {
     _inicializarInicioMapa();
+    _ativarNavegacaoPreview();
     if (typeof iniciarInicio === "function") {
       iniciarInicio();
     }
