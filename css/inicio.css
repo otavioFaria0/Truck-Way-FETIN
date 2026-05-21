@@ -1,112 +1,114 @@
 /* Container Geral da Página */
 .home-container {
-    font-family: sans-serif;
-    padding: 20px;
-    max-width: 600px; /* Mantém a largura de um app mobile mesmo no desktop */
-    margin: 0 auto;
-    color: #333;
+  font-family: sans-serif;
+  padding: 20px;
+  max-width: 600px; /* Mantém a largura de um app mobile mesmo no desktop */
+  margin: 0 auto;
+  color: #333;
 }
 
 /* 1. Área de Saudação */
 .boas-vindas {
-    margin-bottom: 25px;
+  margin-bottom: 25px;
 }
 
 .boas-vindas h2 {
-    font-size: 24px;
-    margin-bottom: 5px;
-    color: #111;
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: #111;
 }
 
 .boas-vindas .status {
-    font-size: 14px;
-    color: #666;
+  font-size: 14px;
+  color: #666;
 }
 
 /* 2. Grid de Atalhos (Mágica do Grid 2x2) */
 .grid-atalhos {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Divide em duas colunas iguais */
-    gap: 15px; /* Espaço entre os cards */
-    margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Divide em duas colunas iguais */
+  gap: 15px; /* Espaço entre os cards */
+  margin-bottom: 30px;
 }
 
 /* Estilo Base dos Cards */
 .card-atalho {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 16px; /* Bordas arredondadas combinando com a barra inferior */
-    padding: 20px 15px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px; /* Bordas arredondadas combinando com a barra inferior */
+  padding: 20px 15px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* Efeito de toque/clique no Card */
 .card-atalho:active {
-    transform: scale(0.95);
-    background-color: #f5f5f5;
+  transform: scale(0.95);
+  background-color: #f5f5f5;
 }
 
 /* Elementos de dentro do Card */
 .icone-card {
-    font-size: 28px;
-    display: block;
-    margin-bottom: 10px;
+  font-size: 28px;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .card-atalho h3 {
-    font-size: 16px;
-    margin: 0 0 5px 0;
-    color: #0c63e4; /* Cor azul combinando com o cabeçalho/menu */
+  font-size: 16px;
+  margin: 0 0 5px 0;
+  color: #0c63e4; /* Cor azul combinando com o cabeçalho/menu */
 }
 
 .card-atalho p {
-    font-size: 12px;
-    margin: 0;
-    color: #777;
-    line-height: 1.3;
+  font-size: 12px;
+  margin: 0;
+  color: #777;
+  line-height: 1.3;
 }
 
 /* Destaque para o Botão SOS de Emergência */
 .card-atalho.sos {
-    border-color: #ffccd5;
-    background-color: #fff5f6;
+  border-color: #ffccd5;
+  background-color: #fff5f6;
 }
 
 .card-atalho.sos h3 {
-    color: #dc3545; /* Vermelho padrão de alerta */
+  color: #dc3545; /* Vermelho padrão de alerta */
 }
 
 /* 3. Painel de Alertas */
 .painel-alertas {
-    background-color: #fff8e1; /* Fundo amarelado sutil que lembra atenção */
-    border-left: 5px solid #ffb300; /* Faixa amarela de trânsito na borda */
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: #fff8e1; /* Fundo amarelado sutil que lembra atenção */
+  border-left: 5px solid #ffb300; /* Faixa amarela de trânsito na borda */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .painel-alertas h3 {
-    font-size: 16px;
-    margin: 0 0 10px 0;
-    color: #b78103;
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  color: #b78103;
 }
 
 .alerta-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .alerta-item span {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .alerta-item p {
-    font-size: 14px;
-    margin: 0;
-    color: #555;
-    line-height: 1.4;
+  font-size: 14px;
+  margin: 0;
+  color: #555;
+  line-height: 1.4;
 }

@@ -1,40 +1,42 @@
 <div class="home-container">
-    <div class="boas-vindas">
-        <h2>Olá, Motorista! 👋</h2>
-        <p class="status">Status: Pronto para iniciar uma nova viagem.</p>
+  <div class="boas-vindas">
+    <h2>Olá, Motorista! 👋</h2>
+    <p class="status">Status: Pronto para iniciar uma nova viagem.</p>
+  </div>
+
+  <div class="grid-atalhos">
+    <div class="card-atalho" onclick="carregarPagina('rota')">
+      <span class="icone-card">📍</span>
+      <h3>Planejar Rota</h3>
+      <p>Trace o melhor caminho</p>
     </div>
 
-    <div class="grid-atalhos">
-        <div class="card-atalho" onclick="carregarPagina('rota')">
-            <span class="icone-card">📍</span>
-            <h3>Planejar Rota</h3>
-            <p>Trace o melhor caminho</p>
-        </div>
-        
-        <div class="card-atalho" onclick="carregarPagina('apoio')">
-            <span class="icone-card">🚚</span>
-            <h3>Pontos de Apoio</h3>
-            <p>Postos, chuveiros e balanças</p>
-        </div>
-
-        <div class="card-atalho" onclick="carregarPagina('avaliacoes')">
-            <span class="icone-card">⭐</span>
-            <h3>Avaliações</h3>
-            <p>Dicas de outros motoristas</p>
-        </div>
-
-        <div class="card-atalho sos" onclick="carregarPagina('apoio')">
-            <span class="icone-card">🚨</span>
-            <h3>Botão SOS</h3>
-            <p>Emergência na pista</p>
-        </div>
+    <div class="card-atalho" onclick="carregarPagina('apoio')">
+      <span class="icone-card">🚚</span>
+      <h3>Pontos de Apoio</h3>
+      <p>Postos, chuveiros e balanças</p>
     </div>
 
-    <div class="painel-alertas">
-        <h3>Alertas na sua região:</h3>
-        <div class="alerta-item">
-            <span>⚠️</span>
-            <p><strong>BR-459:</strong> Atenção para obras na pista próximo ao km 110.</p>
-        </div>
+    <div class="card-atalho" onclick="carregarPagina('avaliacoes')">
+      <span class="icone-card">⭐</span>
+      <h3>Avaliações</h3>
+      <p>Dicas de outros motoristas</p>
     </div>
+
+    <div class="card-atalho sos" onclick="carregarPagina('apoio')">
+      <span class="icone-card">🚨</span>
+      <h3>Botão SOS</h3>
+      <p>Emergência na pista</p>
+    </div>
+  </div>
+
+  <div class="painel-alertas">
+    <h3>Alertas na sua região:</h3>
+    <div class="alerta-item">
+      <span>⚠️</span>
+      <p>
+        <strong>BR-459:</strong> Atenção para obras na pista próximo ao km 110.
+      </p>
+    </div>
+  </div>
 </div>

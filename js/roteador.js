@@ -32,8 +32,9 @@ const conteudo = document.getElementById("conteudo");
 async function carregarPagina(nomePagina) {
   try {
     const resposta = await fetch(`paginas/${nomePagina}.html`);
-    if (!resposta.ok) throw new Error(`Erro ao carregar a página: ${nomePagina}`);
-    
+    if (!resposta.ok)
+      throw new Error(`Erro ao carregar a página: ${nomePagina}`);
+
     const html = await resposta.text();
     if (conteudo) conteudo.innerHTML = html;
 
@@ -46,7 +47,7 @@ async function carregarPagina(nomePagina) {
         scriptMapa.src = "js/mapas.js";
         scriptMapa.defer = true;
         scriptMapa.onload = () => {
-          if (typeof window.inicializarMapa === 'function') {
+          if (typeof window.inicializarMapa === "function") {
             window.inicializarMapa();
           }
         };
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     botao.addEventListener("click", () => {
       const pagina = botao.dataset.pagina;
       carregarPagina(pagina);
-      
+
       botao.classList.add("item-barra--ativo");
       botoes.forEach((b) => {
         if (b !== botao) {
