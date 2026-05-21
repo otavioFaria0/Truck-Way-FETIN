@@ -1,3 +1,102 @@
-<h1> Teste de inicio</h1>
-<p> Este é um teste de inicio para verificar se a paginação esta funcionando corretamente. </p>
-<p> Se você está vendo esta mensagem, então a paginação está funcionando! </p>
+<!-- ============================================================ 
+     inicio.html — Truckway
+     Fragmento da tela inicial. Carregado pelo roteador.js dentro
+     de #conteudo. Não precisa de <html>, <head> ou <body>.
+     ============================================================ 
+     -->
+
+     <!--Impressão minha ou o código assim ta dando erro?-->
+<link rel="stylesheet" href="css/inicio.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<section class="inicio">
+
+  <!-- ── Hero ── -->
+  <div class="inicio__hero">
+    <div class="inicio__hero-estrada" aria-hidden="true">
+      <div class="inicio__hero-linha"></div>
+      <div class="inicio__hero-linha"></div>
+      <div class="inicio__hero-linha"></div>
+    </div>
+    <div class="inicio__hero-conteudo">
+      <p class="inicio__saudacao" id="inicio-saudacao">Bom dia, Motorista</p>
+      <h1 class="inicio__titulo">Sua estrada,<br>com segurança.</h1>
+      <p class="inicio__subtitulo">Rotas, apoio e informações para quem roda de verdade.</p>
+    </div>
+    <div class="inicio__hero-icone" aria-hidden="true">🚛</div>
+  </div>
+
+  <!-- ── Acesso rápido ── -->
+  <div class="inicio__secao">
+    <h2 class="inicio__secao-titulo">Acesso rápido</h2>
+    <div class="inicio__acoes">
+
+      <button class="acao-card acao-card--primario" type="button" onclick="Roteador.ir('rota')">
+        <span class="acao-card__icone">🗺️</span>
+        <span class="acao-card__texto">
+          <strong>Planejar Rota</strong>
+          <small>Calcule o melhor caminho</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+      <button class="acao-card acao-card--secundario" type="button" onclick="Roteador.ir('mapa')">
+        <span class="acao-card__icone">📍</span>
+        <span class="acao-card__texto">
+          <strong>Ver Mapa</strong>
+          <small>Sua posição agora</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+      <button class="acao-card" type="button" onclick="Roteador.ir('apoio')">
+        <span class="acao-card__icone">⛽</span>
+        <span class="acao-card__texto">
+          <strong>Pontos de Apoio</strong>
+          <small>Postos e estrutura</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+      <button class="acao-card" type="button" onclick="Roteador.ir('avaliacoes')">
+        <span class="acao-card__icone">⭐</span>
+        <span class="acao-card__texto">
+          <strong>Avaliações</strong>
+          <small>O que os motoristas dizem</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ── Postos em destaque ── -->
+  <div class="inicio__secao">
+    <h2 class="inicio__secao-titulo">Postos bem avaliados</h2>
+    <div class="inicio__postos" id="inicio-postos">
+      <!-- Preenchido pelo JS abaixo -->
+    </div>
+  </div>
+
+  <!-- ── Balanças ── -->
+  <div class="inicio__secao">
+    <h2 class="inicio__secao-titulo">Balanças na rota</h2>
+    <div class="inicio__balancas" id="inicio-balancas">
+      <!-- Preenchido pelo JS abaixo -->
+    </div>
+  </div>
+
+</section>
+
+ <noscript>
+      <div class="aviso-noscript">Para usar o Truckway corretamente, é necessário habilitar o JavaScript.</div>
+    </noscript>
+
+    <script src="js/inicio.js"></script>   <!-- 1. lógica da tela inicial -->
+
+<!-- Comentário -->
+ <!--   Mano deixei o básico do básico -->
+    <!--   O que tem aqui é só pra mostrar a estrutura, o layout e os ícones, acredito eu. -->
+    <!--   A parte de API, dados dinâmicos e interatividade vai ser feita depois, quando eu não tiver morrendo de sono -->
