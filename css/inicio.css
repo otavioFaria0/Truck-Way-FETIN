@@ -1,0 +1,408 @@
+/* ============================================================
+   inicio.css — Truckway
+   Estilos exclusivos da tela inicial.
+   Depende das variáveis definidas em global.css.
+   ============================================================ */
+
+/* Fonte importada via inicio.html */
+
+.inicio {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 1rem;
+}
+
+
+/* ─────────────────────────────────────────
+   HERO
+───────────────────────────────────────── */
+.inicio__hero {
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #0a1628 0%, #0c2d6b 60%, #0c61eb 100%);
+  border-radius: 20px;
+  padding: 2rem 1.5rem 2rem;
+  min-height: 210px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* Linhas estilo rodovia */
+.inicio__hero-estrada {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  opacity: 0.08;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.inicio__hero-linha {
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    #fff 0px,
+    #fff 40px,
+    transparent 40px,
+    transparent 80px
+  );
+  animation: rodovia 1.4s linear infinite;
+}
+
+.inicio__hero-linha:nth-child(2) { animation-delay: -0.5s; }
+.inicio__hero-linha:nth-child(3) { animation-delay: -1s; }
+
+@keyframes rodovia {
+  from { background-position: 0 0; }
+  to   { background-position: 80px 0; }
+}
+
+/* Caminhão decorativo */
+.inicio__hero-icone {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  font-size: 3.5rem;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  animation: caminhao-flutuando 3s ease-in-out infinite;
+}
+
+@keyframes caminhao-flutuando {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-6px); }
+}
+
+.inicio__hero-conteudo {
+  position: relative;
+  z-index: 1;
+}
+
+.inicio__saudacao {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.inicio__titulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.6rem;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.inicio__subtitulo {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+
+/* ─────────────────────────────────────────
+   SEÇÕES
+───────────────────────────────────────── */
+.inicio__secao {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.inicio__secao-titulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cor-texto-escuro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding-left: 2px;
+}
+
+
+/* ─────────────────────────────────────────
+   CARDS DE AÇÃO RÁPIDA
+───────────────────────────────────────── */
+.inicio__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.acao-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1rem 1.1rem;
+  border: none;
+  border-radius: 16px;
+
+  background: #f3f4f6;
+  color: var(--cor-texto-escuro);
+  text-align: left;
+
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.acao-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.acao-card:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Variante primária — destaque para Planejar Rota */
+.acao-card--primario {
+  background: var(--cor-primaria);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(12, 97, 235, 0.35);
+}
+
+.acao-card--primario:hover {
+  background: #0a52c8;
+  box-shadow: 0 8px 24px rgba(12, 97, 235, 0.45);
+}
+
+/* Variante secundária — Mapa */
+.acao-card--secundario {
+  background: #0a1628;
+  color: #fff;
+}
+
+.acao-card--secundario:hover {
+  background: #0c2040;
+}
+
+.acao-card__icone {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  width: 42px;
+  text-align: center;
+}
+
+.acao-card__texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.acao-card__texto strong {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.acao-card__texto small {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.acao-card__seta {
+  font-size: 1.4rem;
+  opacity: 0.4;
+  flex-shrink: 0;
+  font-weight: 300;
+}
+
+
+/* ─────────────────────────────────────────
+   POSTOS EM DESTAQUE
+───────────────────────────────────────── */
+.inicio__postos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.posto-card {
+  background: #fff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.posto-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.posto-card__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.posto-card__nome {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cor-texto-escuro);
+  flex: 1;
+}
+
+.posto-card__badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--cor-primaria);
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.posto-card__desc {
+  font-size: 0.8rem;
+  color: var(--cor-texto-secundario);
+  line-height: 1.4;
+}
+
+.posto-card__estrelas {
+  font-size: 0.82rem;
+  color: #d97706;
+}
+
+.posto-card__estrelas b {
+  color: var(--cor-texto-secundario);
+  font-weight: 600;
+}
+
+
+/* ─────────────────────────────────────────
+   BALANÇAS
+───────────────────────────────────────── */
+.inicio__balancas {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  background: #fff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.balanca-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--cor-borda);
+  transition: background 0.15s ease;
+}
+
+.balanca-item:last-child {
+  border-bottom: none;
+}
+
+.balanca-item:hover {
+  background: #f9fafb;
+}
+
+.balanca-item__icone {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.balanca-item__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.balanca-item__info strong {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-texto-escuro);
+}
+
+.balanca-item__info small {
+  font-size: 0.75rem;
+  color: var(--cor-texto-secundario);
+  line-height: 1.3;
+}
+
+.balanca-item__status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.balanca-item__status--ativa  { color: #16a34a; }
+.balanca-item__status--inativa { color: #9ca3af; }
+
+
+/* ─────────────────────────────────────────
+   ANIMAÇÃO DE ENTRADA
+───────────────────────────────────────── */
+.inicio > * {
+  animation: entrada 0.4s ease both;
+}
+
+.inicio > *:nth-child(1) { animation-delay: 0s;    }
+.inicio > *:nth-child(2) { animation-delay: 0.07s; }
+.inicio > *:nth-child(3) { animation-delay: 0.14s; }
+.inicio > *:nth-child(4) { animation-delay: 0.21s; }
+
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ─────────────────────────────────────────
+   RESPONSIVIDADE
+───────────────────────────────────────── */
+@media (min-width: 480px) {
+  .inicio__titulo {
+    font-size: 3rem;
+  }
+
+  .inicio__acoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .acao-card--primario {
+    grid-column: 1 / -1;
+  }
+}
