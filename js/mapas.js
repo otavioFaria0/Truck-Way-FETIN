@@ -14,6 +14,7 @@
   // ─────────────────────────────────────────
   let _mapa = null;
   let _camadaPOI = null;
+  let _mapaPreview = null;
 
   const COORDS_PADRAO = [-22.2568, -45.7036]; // Inatel
 
@@ -28,6 +29,47 @@
       _mapa = null;
       _camadaPOI = null;
     }
+  }
+
+  function _destruirMapaPreview() {
+    if (_mapaPreview) {
+      _mapaPreview.remove();
+      _mapaPreview = null;
+    }
+  }
+
+  function _criarMapaPreview(coords) {
+    const preview = document.getElementById("inicio-mapa-preview");
+    if (!preview) return;
+
+    _destruirMapaPreview();
+
+    _mapaPreview = L.map("inicio-mapa-preview", {
+      zoomControl: false,
+      attributionControl: false,
+      dragging: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      touchZoom: false,
+      keyboard: false,
+      tap: false,
+    }).setView(coords, 12);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(_mapaPreview);
+
+    L.circle(coords, {
+      radius: 300,
+      color: "#0c61eb",
+      fillColor: "rgba(12, 97, 235, 0.18)",
+      weight: 2,
+    }).addTo(_mapaPreview);
+
+    setTimeout(() => {
+      if (_mapaPreview) _mapaPreview.invalidateSize();
+    }, 200);
   }
 
   function _criarMapa(coords, precisao = null) {
@@ -255,6 +297,11 @@
     const observer = new MutationObserver(() => {
       if (!document.getElementById("mapa-container")) {
         _destruirMapa();
+      }
+      if (!document.getElementById("inicio-mapa-preview")) {
+        _destruirMapaPreview();
+      }
+      if (!document.getElementById("mapa-container") && !document.getElementById("inicio-mapa-preview")) {
         observer.disconnect();
       }
     });
@@ -276,14 +323,47 @@
     _observarRemocao();
   }
 
+  function _inicializarInicioMapa() {
+    if (!document.getElementById("inicio-mapa-preview")) return;
+
+    if (!navigator.geolocation) {
+      _criarMapaPreview(COORDS_PADRAO);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        _criarMapaPreview([latitude, longitude]);
+      },
+      () => {
+        _criarMapaPreview(COORDS_PADRAO);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 60000,
+      }
+    );
+  }
+
+  function _hookInicio() {
+    _inicializarInicioMapa();
+    if (typeof iniciarInicio === "function") {
+      iniciarInicio();
+    }
+    _observarRemocao();
+  }
+
 
   // Registro no Roteador
   function _registrar() {
     if (window.Roteador) {
       window.Roteador.registrarHook("mapa", _hookMapa);
+      window.Roteador.registrarHook("inicio", _hookInicio);
     } else {
       window.addEventListener("load", () => {
         window.Roteador?.registrarHook("mapa", _hookMapa);
+        window.Roteador?.registrarHook("inicio", _hookInicio);
       });
     }
   }

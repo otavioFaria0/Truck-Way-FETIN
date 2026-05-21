@@ -1,4 +1,4 @@
-(function () {
+function iniciarInicio() {
   // ── Saudação por horário ──
   const hora = new Date().getHours();
   const periodo = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
@@ -43,4 +43,5 @@
       </div>
     `).join("");
   }
-})();
+}
+

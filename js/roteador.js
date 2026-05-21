@@ -177,4 +177,6 @@ window.Roteador = Roteador;
 //  respeitando um hash na URL (ex.: ao recarregar
 //  a página estando em #mapa)
 // ─────────────────────────────────────────
-carregarPagina(_resolverPaginaHash(), false);
+document.addEventListener("DOMContentLoaded", () => {
+  carregarPagina(_resolverPaginaHash(), false);
+});
