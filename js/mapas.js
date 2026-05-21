@@ -8,7 +8,6 @@
 // ============================================================
 
 (function () {
-
   // ─────────────────────────────────────────
   //  Estado interno do módulo
   // ─────────────────────────────────────────
@@ -16,7 +15,6 @@
   let _camadaPOI = null;
 
   const COORDS_PADRAO = [-22.2568, -45.7036]; // Inatel
-
 
   // ══════════════════════════════════════════
   //  CICLO DE VIDA DO MAPA
@@ -44,7 +42,8 @@
     L.control.zoom({ position: "bottomright" }).addTo(_mapa);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19,
     }).addTo(_mapa);
 
@@ -61,9 +60,10 @@
       iconAnchor: [20, 20],
     });
 
-    const textoPopup = precisao !== null
-      ? `<b>Você está aqui</b><br><small>Precisão: ~${Math.round(precisao)} m</small>`
-      : `<b>Truckway</b><br><small>Inatel — Santa Rita do Sapucaí</small>`;
+    const textoPopup =
+      precisao !== null
+        ? `<b>Você está aqui</b><br><small>Precisão: ~${Math.round(precisao)} m</small>`
+        : `<b>Truckway</b><br><small>Inatel — Santa Rita do Sapucaí</small>`;
 
     L.marker(coords, { icon: iconeUsuario })
       .addTo(_mapa)
@@ -76,7 +76,6 @@
 
     _adicionarPOIs();
   }
-
 
   // ══════════════════════════════════════════
   //  GEOLOCALIZAÇÃO
@@ -105,7 +104,7 @@
         enableHighAccuracy: true,
         timeout: 8000,
         maximumAge: 60000,
-      }
+      },
     );
   }
 
@@ -113,7 +112,6 @@
     const el = document.getElementById("mapa-carregando");
     if (el) el.hidden = !visivel;
   }
-
 
   // ══════════════════════════════════════════
   //  BUSCA NO MAPA
@@ -133,9 +131,9 @@
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(termo)}&limit=1&countrycodes=br`,
         {
           headers: {
-            "Accept-Language": "pt-BR,pt"
-          }
-        }
+            "Accept-Language": "pt-BR,pt",
+          },
+        },
       )
         .then((r) => r.json())
         .then((lista) => {
@@ -149,7 +147,7 @@
 
           _mapa.flyTo(coords, 14, {
             animate: true,
-            duration: 1
+            duration: 1,
           });
 
           L.popup()
@@ -170,7 +168,6 @@
       }
     });
   }
-
 
   // ══════════════════════════════════════════
   //  MARCADORES DE POI
@@ -198,9 +195,7 @@
         "★".repeat(Math.round(ponto.avaliacao)) +
         "☆".repeat(5 - Math.round(ponto.avaliacao));
 
-      L.marker(ponto.coords, { icon: icone })
-        .addTo(_camadaPOI)
-        .bindPopup(`
+      L.marker(ponto.coords, { icon: icone }).addTo(_camadaPOI).bindPopup(`
           <div class="popup-poi">
             <strong>${ponto.nome}</strong>
             <span class="popup-poi__rodovia">${ponto.rodovia}</span>
@@ -224,25 +219,22 @@
         iconAnchor: [18, 18],
       });
 
-      L.marker(balanca.coords, { icon: icone })
-        .addTo(_camadaPOI)
-        .bindPopup(`
+      L.marker(balanca.coords, { icon: icone }).addTo(_camadaPOI).bindPopup(`
           <div class="popup-poi">
             <strong>${balanca.nome}</strong>
             <span class="popup-poi__rodovia">${balanca.rodovia}</span>
             <p>${balanca.descricao}</p>
-            <span class="popup-poi__status ${balanca.operando
-              ? "popup-poi__status--ok"
-              : "popup-poi__status--off"}">
-              ${balanca.operando
-                ? "● Em operação"
-                : "○ Inativo / variável"}
+            <span class="popup-poi__status ${
+              balanca.operando
+                ? "popup-poi__status--ok"
+                : "popup-poi__status--off"
+            }">
+              ${balanca.operando ? "● Em operação" : "○ Inativo / variável"}
             </span>
           </div>
         `);
     });
   }
-
 
   // ══════════════════════════════════════════
   //  OBSERVER
@@ -265,7 +257,6 @@
     });
   }
 
-
   // ══════════════════════════════════════════
   //  HOOK PRINCIPAL
   // ══════════════════════════════════════════
@@ -275,7 +266,6 @@
     _inicializarBusca();
     _observarRemocao();
   }
-
 
   // Registro no Roteador
   function _registrar() {
@@ -293,5 +283,4 @@
   if (typeof window !== "undefined") {
     window.inicializarMapa = _hookMapa;
   }
-
 })();

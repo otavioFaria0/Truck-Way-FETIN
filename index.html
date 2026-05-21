@@ -8,14 +8,17 @@
       name="description"
       content="Truckway: rotas seguras, pontos de apoio, balanças e avaliações para caminhoneiros."
     />
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
+
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="assets/logo/favicon.ico" />
     <link rel="apple-touch-icon" href="assets/logo/icon-192.png" />
-    
+
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/mapa.css" />
     <link rel="stylesheet" href="css/inicio.css" />
@@ -24,11 +27,24 @@
   <body>
     <div class="app">
       <header class="cabecalho">
-        <button class="botao-icone" type="button" id="abrirMenu" aria-label="Abrir menu lateral">
-          <img src="conteudos/icones/barra-lateral.png" alt="" aria-hidden="true" />
+        <button
+          class="botao-icone"
+          type="button"
+          id="abrirMenu"
+          aria-label="Abrir menu lateral"
+        >
+          <img
+            src="conteudos/icones/barra-lateral.png"
+            alt=""
+            aria-hidden="true"
+          />
         </button>
 
-        <a href="#inicio" class="marca" aria-label="Truckway - voltar para a página inicial">
+        <a
+          href="#inicio"
+          class="marca"
+          aria-label="Truckway - voltar para a página inicial"
+        >
           <span class="marca__logo" aria-hidden="true">TW</span>
           <span class="marca__nome">Truckway</span>
         </a>
@@ -38,7 +54,11 @@
             <img src="conteudos/icones/sino.png" alt="" aria-hidden="true" />
           </button>
 
-          <button class="botao-perfil" type="button" aria-label="Área do usuário">
+          <button
+            class="botao-perfil"
+            type="button"
+            aria-label="Área do usuário"
+          >
             <span class="botao-perfil__avatar" aria-hidden="true">MF</span>
             <span class="botao-perfil__texto">
               <strong>Motorista</strong>
@@ -48,22 +68,50 @@
         </div>
       </header>
 
-      <aside class="menu-lateral" id="menuLateral" aria-label="Menu lateral" aria-hidden="true">
+      <aside
+        class="menu-lateral"
+        id="menuLateral"
+        aria-label="Menu lateral"
+        aria-hidden="true"
+      >
         <div class="menu-lateral__topo">
           <div>
             <p class="menu-lateral__titulo">Menu</p>
             <p class="menu-lateral__subtitulo">Ferramentas do projeto</p>
           </div>
-          <button class="botao-icone" type="button" id="fecharMenu" aria-label="Fechar menu lateral">✕</button>
+          <button
+            class="botao-icone"
+            type="button"
+            id="fecharMenu"
+            aria-label="Fechar menu lateral"
+          >
+            ✕
+          </button>
         </div>
 
         <nav class="menu-lateral__nav" aria-label="Navegação secundária">
-          <button class="menu-lateral__link" type="button" data-pagina="inicio">Início</button>
-          <button class="menu-lateral__link" type="button" data-pagina="rota">Planejar Rota</button>
-          <button class="menu-lateral__link" type="button" data-pagina="mapa">Mapa</button>
-          <button class="menu-lateral__link" type="button" data-pagina="apoio">Pontos de Apoio</button>
-          <button class="menu-lateral__link" type="button" data-pagina="avaliacoes">Avaliações</button>
-          <button class="menu-lateral__link" type="button" data-pagina="sobre">Sobre</button>
+          <button class="menu-lateral__link" type="button" data-pagina="inicio">
+            Início
+          </button>
+          <button class="menu-lateral__link" type="button" data-pagina="rota">
+            Planejar Rota
+          </button>
+          <button class="menu-lateral__link" type="button" data-pagina="mapa">
+            Mapa
+          </button>
+          <button class="menu-lateral__link" type="button" data-pagina="apoio">
+            Pontos de Apoio
+          </button>
+          <button
+            class="menu-lateral__link"
+            type="button"
+            data-pagina="avaliacoes"
+          >
+            Avaliações
+          </button>
+          <button class="menu-lateral__link" type="button" data-pagina="sobre">
+            Sobre
+          </button>
         </nav>
       </aside>
 
@@ -71,27 +119,41 @@
 
       <main id="conteudo" class="conteudo"></main>
 
-      <noscript class="aviso-noscript">Este site requer JavaScript para funcionar corretamente.</noscript>
+      <noscript class="aviso-noscript"
+        >Este site requer JavaScript para funcionar corretamente.</noscript
+      >
     </div>
 
-    <footer class="barra-inferior" role="navigation" aria-label="Barra inferior">
+    <footer
+      class="barra-inferior"
+      role="navigation"
+      aria-label="Barra inferior"
+    >
       <button class="item-barra home" type="button" data-pagina="inicio">
-        <span class="item-barra__icone"><img src="conteudos/icones/home.png" alt="Início"/></span>
+        <span class="item-barra__icone"
+          ><img src="conteudos/icones/home.png" alt="Início"
+        /></span>
         <span>Início</span>
       </button>
 
       <button class="item-barra rota" type="button" data-pagina="rota">
-        <span class="item-barra__icone"><img src="conteudos/icones/rota.png" alt="Rota"/></span>
+        <span class="item-barra__icone"
+          ><img src="conteudos/icones/rota.png" alt="Rota"
+        /></span>
         <span>Rota</span>
       </button>
 
       <button class="item-barra mapa" type="button" data-pagina="mapa">
-        <span class="item-barra__icone"><img src="conteudos/icones/brasil.png" alt="Mapa"/></span>
+        <span class="item-barra__icone"
+          ><img src="conteudos/icones/brasil.png" alt="Mapa"
+        /></span>
         <span>Mapa</span>
       </button>
 
       <button class="item-barra apoio" type="button" data-pagina="apoio">
-        <span class="item-barra__icone"><img src="conteudos/icones/apoio.png" alt="Apoio"/></span>
+        <span class="item-barra__icone"
+          ><img src="conteudos/icones/apoio.png" alt="Apoio"
+        /></span>
         <span>Apoio</span>
       </button>
     </footer>
