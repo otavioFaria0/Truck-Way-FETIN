@@ -20,8 +20,13 @@
     <link rel="apple-touch-icon" href="assets/logo/icon-192.png" />
 
     <link rel="stylesheet" href="css/global.css" />
-    <link rel="stylesheet" href="css/mapa.css" />
     <link rel="stylesheet" href="css/inicio.css" />
+    <link rel="stylesheet" href="css/mapa.css" />
+    <link rel="stylesheet" href="css/rota.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
     <title>Truckway</title>
   </head>
   <body>
@@ -158,9 +163,9 @@
       </button>
     </footer>
 
-    <script src="js/dados.js"></script>
-    <script src="js/roteador.js"></script>
-    <script src="js/pwa.js" defer></script>
-    <script src="js/principal.js" defer></script>
+    <script src="js/config.js"></script>           <!-- 1. configurações e API key -->
+    <script src="js/dados.js"></script>            <!-- 2. dados e utilitários -->
+    <script src="js/mapas.js" defer></script>      <!-- 4. hook da aba mapa -->
+    <script src="js/roteador.js" defer></script>   <!-- 5. inicia a navegação -->
   </body>
 </html>

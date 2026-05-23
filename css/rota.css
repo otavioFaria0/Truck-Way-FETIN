@@ -1,0 +1,409 @@
+/* ============================================================
+   rota.css — Truckway
+   Layout estilo Google Maps: mapa ocupa a tela toda,
+   painel de formulário flutua na parte inferior.
+   ============================================================ */
+
+/* ── Wrapper: ocupa exatamente o espaço entre header e barra inferior ── */
+.rota-wrapper {
+  position: fixed;
+  top: var(--altura-cabecalho);
+  left: 0;
+  right: 0;
+  bottom: var(--altura-barra-inferior);
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* ── Container do mapa Leaflet ── */
+#rota-mapa-container {
+  width: 100%;
+  height: 100%;
+  background: #e8e0d8;
+}
+
+/* ══════════════════════════════════════════
+   PAINEL INFERIOR (flutua sobre o mapa)
+══════════════════════════════════════════ */
+.rota-painel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
+  padding: 0 1rem 1.25rem;
+
+  /* Altura máxima: ocupa 70% da tela em tela pequena */
+  max-height: 70%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.rota-painel::-webkit-scrollbar { display: none; }
+
+/* Alça de arraste (visual) */
+.rota-painel__alca {
+  width: 40px;
+  height: 4px;
+  background: #d1d5db;
+  border-radius: 2px;
+  margin: 10px auto 14px;
+}
+
+/* ══════════════════════════════════════════
+   FORMULÁRIO
+══════════════════════════════════════════ */
+.rota-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Bloco de campos (origem + destino juntos) */
+.rota-campos {
+  background: #f9fafb;
+  border: 1.5px solid var(--cor-borda);
+  border-radius: 14px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rota-campo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.rota-campo__bolinha {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.rota-campo__bolinha--a { background: var(--cor-primaria); }
+.rota-campo__bolinha--b { background: #16a34a; }
+
+.rota-campo__wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid var(--cor-borda);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.rota-campo__wrap:focus-within {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(12,97,235,0.08);
+}
+
+.rota-campo__wrap--ok   { border-color: #16a34a; }
+.rota-campo__wrap--erro { border-color: #dc2626; }
+
+.rota-campo__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--cor-texto-escuro);
+  background: transparent;
+  min-width: 0;
+}
+
+.rota-campo__input::placeholder { color: #9ca3af; }
+
+.rota-campo__btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: transparent;
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--cor-borda);
+  transition: color 0.2s, background 0.2s;
+}
+
+.rota-campo__btn:hover   { color: var(--cor-primaria); background: #eff6ff; }
+.rota-campo__btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Separador com botão trocar entre os campos */
+.rota-campos__separador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0 0.4rem 30px;
+}
+
+.rota-campos__linha {
+  flex: 1;
+  height: 1px;
+  background: var(--cor-borda);
+}
+
+.rota-campos__trocar {
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid var(--cor-borda);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.rota-campos__trocar:hover {
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+  transform: rotate(180deg);
+}
+
+/* Confirmações */
+.rota-confirmacao {
+  font-size: 0.77rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  margin-top: -0.25rem;
+}
+
+.rota-confirmacao--ok   { color: #15803d; background: #f0fdf4; }
+.rota-confirmacao--erro { color: #b91c1c; background: #fef2f2; }
+
+/* Chips de veículo */
+.veiculo-chips {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.veiculo-chips::-webkit-scrollbar { display: none; }
+
+.veiculo-chip {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--cor-borda);
+  border-radius: 10px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+
+.veiculo-chip:hover          { border-color: var(--cor-primaria); background: #eff6ff; }
+.veiculo-chip--ativo         { border-color: var(--cor-primaria); background: #eff6ff; box-shadow: 0 0 0 3px rgba(12,97,235,0.12); }
+.veiculo-chip--ativo .veiculo-chip__nome { color: var(--cor-primaria); }
+
+.veiculo-chip__nome { font-size: 0.8rem; font-weight: 700; color: var(--cor-texto-escuro); }
+.veiculo-chip__sub  { font-size: 0.65rem; color: var(--cor-texto-secundario); }
+
+/* Erro */
+.rota-erro {
+  font-size: 0.82rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+}
+
+/* Botão calcular */
+.btn-calcular {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--cor-primaria);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px rgba(12,97,235,0.3);
+  transition: background 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+
+.btn-calcular:hover    { background: #0a52c8; transform: translateY(-1px); }
+.btn-calcular:active   { background: #0845a8; transform: none; }
+.btn-calcular:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Spinner dentro de botão */
+.spinner-btn {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-btn 0.65s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin-btn { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════════
+   RESULTADO (substitui o form após calcular)
+══════════════════════════════════════════ */
+.rota-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: subir 0.3s ease;
+}
+
+@keyframes subir {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rota-resultado__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.rota-resultado__numeros {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #f0f9ff;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  flex: 1;
+}
+
+.rota-resultado__num {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.rota-resultado__valor {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--cor-primaria);
+  line-height: 1;
+}
+
+.rota-resultado__legenda {
+  font-size: 0.65rem;
+  color: var(--cor-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rota-resultado__divisor {
+  width: 1px;
+  height: 40px;
+  background: #bfdbfe;
+  margin: 0 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-nova-rota {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.9rem;
+  border: 1.5px solid var(--cor-borda);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--cor-texto-escuro);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: inherit;
+}
+
+.btn-nova-rota:hover { border-color: var(--cor-primaria); background: #eff6ff; color: var(--cor-primaria); }
+
+.rota-resultado__trecho {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.75rem;
+  background: #f0fdf4;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rota-resultado__ponto {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.62rem; font-weight: 800; color: #fff;
+  flex-shrink: 0;
+}
+
+.rota-resultado__ponto--a { background: var(--cor-primaria); }
+.rota-resultado__ponto--b { background: #16a34a; }
+
+.rota-resultado__cidade {
+  flex: 1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cor-texto-escuro);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.rota-resultado__hgv {
+  font-size: 0.75rem;
+  color: #15803d;
+  background: #f0fdf4;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════
+   PINS DA ROTA NO MAPA
+══════════════════════════════════════════ */
+.pin-rota {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 800; color: #fff;
+}
+
+.pin-rota--a { background: var(--cor-primaria); }
+.pin-rota--b { background: #16a34a; }
