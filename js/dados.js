@@ -112,7 +112,10 @@ const Dados = {
    */
   formatarDistancia(metros) {
     if (metros >= 1000) {
-      return `${(metros / 1000).toFixed(0)} km`;
+      const km = metros / 1000;
+      // Para rotas longas, não precisamos de decimais; para médias, 1 casa
+      if (km >= 100) return `${km.toFixed(0)} km`;
+      return `${km.toFixed(1)} km`;
     }
     return `${Math.round(metros)} m`;
   },
@@ -124,9 +127,14 @@ const Dados = {
   formatarDuracao(segundos) {
     const h = Math.floor(segundos / 3600);
     const m = Math.floor((segundos % 3600) / 60);
-    if (h === 0) return `${m} min`;
-    if (m === 0) return `${h}h`;
-    return `${h}h ${m}min`;
+    const s = Math.floor(segundos % 60);
+    if (h > 0) {
+      return m === 0 ? `${h}h` : `${h}h ${m}min`;
+    }
+    if (m > 0) {
+      return s === 0 ? `${m} min` : `${m} min ${s}s`;
+    }
+    return `${s} s`;
   },
 
 };
