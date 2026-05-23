@@ -1,3 +1,110 @@
-<h1> teste de apoio</h1>
-<p> Este é um teste de apoio para verificar se a paginação esta funcionando corretamente. </p>
-<p> Se você está vendo esta mensagem, então a paginação está funcionando! </p>
+<!--
+    apoio.html — Fragmento de página de Suporte (injetado em #conteudo)
+    Mantém apenas o HTML necessário para o Roteador.
+-->
+
+<section class="apoio">
+
+    <div class="apoio__hero">
+        <div class="apoio__hero-conteudo">
+            <h1>Central de Ajuda Truckway</h1>
+            <p>Como podemos facilitar a sua viagem hoje?</p>
+
+            <div class="apoio__search">
+                <input id="busca-apoio-input" type="search" placeholder="Ex: Problema com GPS, bloqueio na BR-381..." aria-label="Buscar ajuda">
+                <button id="busca-apoio-botao" type="button">Buscar</button>
+            </div>
+        </div>
+        <div class="apoio__hero-icone" aria-hidden="true">🛠️</div>
+    </div>
+
+    <main class="apoio__container">
+
+        <section class="apoio__categorias">
+            <h2>Categorias Rápidas</h2>
+            <div class="apoio__cards">
+                <button class="categoria-card" type="button" onclick="Roteador.ir('mapa')">
+                    <span class="cat-icone">📍</span>
+                    <strong>Mapas e Rotas</strong>
+                    <small>GPS, perfil HGV e rotas alternativas</small>
+                </button>
+
+                <button class="categoria-card" type="button" onclick="Roteador.ir('mapa')">
+                    <span class="cat-icone">⛽</span>
+                    <strong>Postos e Apoio</strong>
+                    <small>Postos, lavagem e serviços</small>
+                </button>
+
+                <button class="categoria-card" type="button">
+                    <span class="cat-icone">⚠️</span>
+                    <strong>Alertas na Via</strong>
+                    <small>Bloqueios, acidentes e obras</small>
+                </button>
+
+                <button class="categoria-card" type="button">
+                    <span class="cat-icone">🐛</span>
+                    <strong>Erros no App</strong>
+                    <small>Relatar falhas e sugestões</small>
+                </button>
+            </div>
+        </section>
+
+        <section class="apoio__faq">
+            <h2>Perguntas Frequentes</h2>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">O Truckway funciona sem internet?</button>
+                    <div class="faq-answer" hidden>
+                        <p>O aplicativo oferece cache de mapas para situações limitadas. Para rotas completas, é recomendada conexão.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="apoio__contato">
+            <div class="contato-info">
+                <h2>Não encontrou a solução?</h2>
+                <p>Envie um chamado à nossa equipe de suporte. Respondemos rapidamente.</p>
+                <p><strong>E-mail:</strong> suporte@truckway.com.br</p>
+            </div>
+
+            <form id="apoio-form" class="contato-form" action="#" method="post">
+                <label>
+                    <span>Nome</span>
+                    <input id="apoio-nome" name="nome" required>
+                </label>
+
+                <label>
+                    <span>E-mail</span>
+                    <input id="apoio-email" name="email" type="email" required>
+                </label>
+
+                <label>
+                    <span>Tipo de problema</span>
+                    <select id="apoio-tipo" name="tipo">
+                        <option>Selecione...</option>
+                        <option>Mapa / Rotas</option>
+                        <option>Postos / Apoio</option>
+                        <option>Alertas na via</option>
+                        <option>Erro no app</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Mensagem</span>
+                    <textarea id="apoio-mensagem" name="mensagem" rows="4" required></textarea>
+                </label>
+
+                <div class="contato-form__acoes">
+                    <button type="submit" class="btn btn--primario">Enviar chamado</button>
+                    <button type="reset" class="btn">Limpar</button>
+                </div>
+
+                <div id="apoio-feedback" class="contato-feedback" aria-live="polite"></div>
+            </form>
+        </section>
+
+    </main>
+
+</section>
