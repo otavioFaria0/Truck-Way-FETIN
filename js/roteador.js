@@ -83,3 +83,45 @@ document.addEventListener("DOMContentLoaded", () => {
   // Carrega a página inicial por padrão
   carregarPagina("inicio");
 });
+
+
+// ─────────────────────────────────────────
+//  Suporte ao botão Voltar/Avançar do navegador
+// ─────────────────────────────────────────
+window.addEventListener("popstate", (evento) => {
+  const pagina = evento.state?.pagina ?? _resolverPaginaHash();
+  // pushState = false para não duplicar a entrada no histórico
+  _paginaAtual = null; // força o recarregamento
+  carregarPagina(pagina, false);
+});
+
+
+// ─────────────────────────────────────────
+//  Lê a página a partir do hash da URL (ex.: #mapa)
+// ─────────────────────────────────────────
+function _resolverPaginaHash() {
+  const hash = location.hash.replace("#", "").trim();
+  const paginasValidas = ["inicio", "rota", "mapa", "apoio", "avaliacoes", "sobre"];
+  return paginasValidas.includes(hash) ? hash : "inicio";
+}
+
+
+// ─────────────────────────────────────────
+//  API pública
+// ─────────────────────────────────────────
+const Roteador = {
+  ir: carregarPagina,
+  registrarHook,
+};
+
+window.Roteador = Roteador;
+
+
+// ─────────────────────────────────────────
+//  Inicialização — carrega a página correta
+//  respeitando um hash na URL (ex.: ao recarregar
+//  a página estando em #mapa)
+// ─────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  carregarPagina(_resolverPaginaHash(), false);
+});

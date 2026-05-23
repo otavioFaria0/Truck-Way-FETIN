@@ -1,3 +1,140 @@
-<h1> Teste de rota</h1>
-<p> Este é um teste de rota para verificar se a paginação esta funcionando corretamente. </p>
-<p> Se você está vendo esta mensagem, então a paginação está funcionando! </p>
+<div class="rota-wrapper">
+
+  <!-- ══ MAPA DA ROTA ══ -->
+  <div id="rota-mapa-container"></div>
+
+  <!-- ══ PAINEL INFERIOR (estilo Google Maps) ══ -->
+  <div class="rota-painel" id="rota-painel">
+
+    <!-- Alça para expandir/recolher -->
+    <div class="rota-painel__alca" id="rota-painel-alca"></div>
+
+    <!-- Estado 1: FORMULÁRIO -->
+    <div id="rota-form" class="rota-form">
+
+      <!-- Campos de origem e destino -->
+      <div class="rota-campos">
+
+        <div class="rota-campo">
+          <div class="rota-campo__bolinha rota-campo__bolinha--a">A</div>
+          <div class="rota-campo__wrap">
+            <input id="input-origem" class="rota-campo__input" type="search"
+              placeholder="De onde você sai?" autocomplete="off" />
+            <button id="btn-origem-busca" class="rota-campo__btn" type="button" aria-label="Buscar origem">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="rota-campos__separador">
+          <div class="rota-campos__linha"></div>
+          <button id="btn-trocar" class="rota-campos__trocar" type="button" aria-label="Trocar">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+        </div>
+
+        <div class="rota-campo">
+          <div class="rota-campo__bolinha rota-campo__bolinha--b">B</div>
+          <div class="rota-campo__wrap">
+            <input id="input-destino" class="rota-campo__input" type="search"
+              placeholder="Para onde você vai?" autocomplete="off" />
+            <button id="btn-destino-busca" class="rota-campo__btn" type="button" aria-label="Buscar destino">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Confirmações -->
+      <p id="confirmacao-origem" class="rota-confirmacao" hidden></p>
+      <p id="confirmacao-destino" class="rota-confirmacao" hidden></p>
+
+      <!-- Chips de veículo -->
+      <div class="veiculo-chips" role="radiogroup" aria-label="Tipo de veículo">
+        <button class="veiculo-chip veiculo-chip--ativo" type="button" data-veiculo="toco"
+          data-peso="16" data-altura="4.4" data-largura="2.6" data-comprimento="14.0">
+          <span class="veiculo-chip__nome">Toco</span>
+          <span class="veiculo-chip__sub">16 t</span>
+        </button>
+        <button class="veiculo-chip" type="button" data-veiculo="truck"
+          data-peso="23" data-altura="4.4" data-largura="2.6" data-comprimento="14.0">
+          <span class="veiculo-chip__nome">Truck</span>
+          <span class="veiculo-chip__sub">23 t</span>
+        </button>
+        <button class="veiculo-chip" type="button" data-veiculo="carreta"
+          data-peso="41.5" data-altura="4.4" data-largura="2.6" data-comprimento="18.6">
+          <span class="veiculo-chip__nome">Carreta</span>
+          <span class="veiculo-chip__sub">41,5 t</span>
+        </button>
+        <button class="veiculo-chip" type="button" data-veiculo="bitrem"
+          data-peso="57" data-altura="4.4" data-largura="2.6" data-comprimento="19.8">
+          <span class="veiculo-chip__nome">Bitrem</span>
+          <span class="veiculo-chip__sub">57 t</span>
+        </button>
+        <button class="veiculo-chip" type="button" data-veiculo="rodotrem"
+          data-peso="74" data-altura="4.4" data-largura="2.6" data-comprimento="25.0">
+          <span class="veiculo-chip__nome">Rodotrem</span>
+          <span class="veiculo-chip__sub">74 t</span>
+        </button>
+        <button class="veiculo-chip" type="button" data-veiculo="vuc"
+          data-peso="6" data-altura="3.8" data-largura="2.2" data-comprimento="7.0">
+          <span class="veiculo-chip__nome">VUC</span>
+          <span class="veiculo-chip__sub">6 t</span>
+        </button>
+        <button class="veiculo-chip" type="button" data-veiculo="mini"
+          data-peso="5" data-altura="3.2" data-largura="2.1" data-comprimento="6.0">
+          <span class="veiculo-chip__nome">Mini</span>
+          <span class="veiculo-chip__sub">5 t</span>
+        </button>
+      </div>
+
+      <!-- Erro -->
+      <p id="rota-erro" class="rota-erro" hidden></p>
+
+      <!-- Botão calcular -->
+      <button id="btn-calcular" class="btn-calcular" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Calcular Rota
+      </button>
+
+    </div>
+
+    <!-- Estado 2: RESULTADO (aparece após calcular) -->
+    <div id="rota-resultado" class="rota-resultado" hidden>
+
+      <div class="rota-resultado__topo">
+        <div class="rota-resultado__numeros">
+          <div class="rota-resultado__num">
+            <span class="rota-resultado__valor" id="resultado-distancia">—</span>
+            <span class="rota-resultado__legenda">distância</span>
+          </div>
+          <div class="rota-resultado__divisor"></div>
+          <div class="rota-resultado__num">
+            <span class="rota-resultado__valor" id="resultado-duracao">—</span>
+            <span class="rota-resultado__legenda">tempo est.</span>
+          </div>
+        </div>
+        <button id="btn-nova-rota" class="btn-nova-rota" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Nova rota
+        </button>
+      </div>
+
+      <div class="rota-resultado__trecho">
+        <span class="rota-resultado__ponto rota-resultado__ponto--a">A</span>
+        <span class="rota-resultado__cidade" id="resultado-origem-nome">—</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <span class="rota-resultado__cidade" id="resultado-destino-nome">—</span>
+        <span class="rota-resultado__ponto rota-resultado__ponto--b">B</span>
+      </div>
+
+      <div class="rota-resultado__hgv">
+        ✅ Rota aprovada para caminhão pesado — restrições de peso, altura, largura e comprimento aplicadas
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,42 +1,92 @@
-<div class="home-container">
-  <div class="boas-vindas">
-    <h2>Olá, Motorista! 👋</h2>
-    <p class="status">Status: Pronto para iniciar uma nova viagem.</p>
+<!-- ============================================================ 
+     inicio.html — Truckway
+     Fragmento da tela inicial. Carregado pelo roteador.js dentro
+     de #conteudo. Não precisa de <html>, <head> ou <body>.
+     ============================================================ 
+     -->
+
+<section class="inicio">
+
+  <!-- ── Hero ── -->
+  <div class="inicio__hero">
+    <div class="inicio__hero-estrada" aria-hidden="true">
+      <div class="inicio__hero-linha"></div>
+      <div class="inicio__hero-linha"></div>
+      <div class="inicio__hero-linha"></div>
+    </div>
+    <div class="inicio__hero-conteudo">
+      <h1 class="inicio__saudacao" id="inicio-saudacao">Bom dia, Motorista</h1>
+      <p class="inicio__subtitulo">Rotas, apoio e informações para quem roda de verdade.</p>
+    </div>
+    <div class="inicio__hero-icone" aria-hidden="true">🚛</div>
   </div>
 
-  <div class="grid-atalhos">
-    <div class="card-atalho" onclick="carregarPagina('rota')">
-      <span class="icone-card">📍</span>
-      <h3>Planejar Rota</h3>
-      <p>Trace o melhor caminho</p>
-    </div>
-
-    <div class="card-atalho" onclick="carregarPagina('apoio')">
-      <span class="icone-card">🚚</span>
-      <h3>Pontos de Apoio</h3>
-      <p>Postos, chuveiros e balanças</p>
-    </div>
-
-    <div class="card-atalho" onclick="carregarPagina('avaliacoes')">
-      <span class="icone-card">⭐</span>
-      <h3>Avaliações</h3>
-      <p>Dicas de outros motoristas</p>
-    </div>
-
-    <div class="card-atalho sos" onclick="carregarPagina('apoio')">
-      <span class="icone-card">🚨</span>
-      <h3>Botão SOS</h3>
-      <p>Emergência na pista</p>
+  <!-- ── Mapa rápido ── -->
+  <div class="inicio__secao inicio__mapa-card">
+    
+    <div class="inicio__mapa-preview" id="inicio-mapa-preview" role="button" tabindex="0" aria-label="Abrir o mapa completo">
+      <div class="inicio__mapa-placa">Mapa de aproximação dos pontos de apoio</div>
     </div>
   </div>
 
-  <div class="painel-alertas">
-    <h3>Alertas na sua região:</h3>
-    <div class="alerta-item">
-      <span>⚠️</span>
-      <p>
-        <strong>BR-459:</strong> Atenção para obras na pista próximo ao km 110.
-      </p>
+  <!-- ── Acesso rápido ── -->
+  <div class="inicio__secao">
+    <h2 class="inicio__secao-titulo">Acesso rápido</h2>
+    <div class="inicio__acoes">
+
+      <button class="acao-card acao-card--primario" type="button" onclick="Roteador.ir('rota')">
+        <span class="acao-card__icone">🗺️</span>
+        <span class="acao-card__texto">
+          <strong>Planejar Rota</strong>
+          <small>Calcule o melhor caminho</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+      <button class="acao-card acao-card--secundario" type="button" onclick="Roteador.ir('mapa')">
+        <span class="acao-card__icone">📍</span>
+        <span class="acao-card__texto">
+          <strong>Ver Mapa</strong>
+          <small>Sua posição agora</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+      <button class="acao-card" type="button" onclick="Roteador.ir('apoio')">
+        <span class="acao-card__icone">⛽</span>
+        <span class="acao-card__texto">
+          <strong>Pontos de Apoio</strong>
+          <small>Postos e estrutura</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
+      <button class="acao-card" type="button" onclick="Roteador.ir('avaliacoes')">
+        <span class="acao-card__icone">⭐</span>
+        <span class="acao-card__texto">
+          <strong>Avaliações</strong>
+          <small>O que os motoristas dizem</small>
+        </span>
+        <span class="acao-card__seta">›</span>
+      </button>
+
     </div>
   </div>
-</div>
+
+  <!-- ── Postos em destaque ── -->
+  <div class="inicio__secao">
+    <h2 class="inicio__secao-titulo">Postos bem avaliados</h2>
+    <div class="inicio__postos" id="inicio-postos">
+      <!-- Preenchido pelo JS abaixo -->
+    </div>
+  </div>
+
+  <!-- ── Balanças ── -->
+  <div class="inicio__secao">
+    <h2 class="inicio__secao-titulo">Balanças na rota</h2>
+    <div class="inicio__balancas" id="inicio-balancas">
+      <!-- Preenchido pelo JS abaixo -->
+    </div>
+  </div>
+
+</section>
