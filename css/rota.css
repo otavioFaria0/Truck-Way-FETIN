@@ -1,7 +1,10 @@
 /* ============================================================
-   rota.css — Truckway
-   Layout estilo Google Maps: mapa ocupa a tela toda,
-   painel de formulário flutua na parte inferior.
+   rota.css — Truckway  (versão melhorada)
+   Acrescentado:
+     • .pin-rota--wp (waypoints intermediários)
+     • .rota-campo__bolinha--wp
+     • .btn-add-parada
+     • estilos do painel de navegação turn-by-turn
    ============================================================ */
 
 /* ── Wrapper: ocupa exatamente o espaço entre header e barra inferior ── */
@@ -37,10 +40,16 @@
   box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
   padding: 0 1rem 1.25rem;
 
-  /* Altura máxima: ocupa 70% da tela em tela pequena */
-  max-height: 70%;
+  max-height: 72%;
   overflow-y: auto;
   scrollbar-width: none;
+  transform: translateY(var(--rota-painel-offset, 0));
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.rota-painel.rota-painel--dragging {
+  transition: none;
 }
 
 .rota-painel::-webkit-scrollbar { display: none; }
@@ -51,7 +60,48 @@
   height: 4px;
   background: #d1d5db;
   border-radius: 2px;
-  margin: 10px auto 14px;
+  margin: 10px auto 8px;
+  cursor: grab;
+  touch-action: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.rota-painel__alca:focus-visible {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 4px;
+}
+.rota-painel__alca--dragging {
+  cursor: grabbing;
+}
+
+.rota-painel__cabecalho {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0 0;
+}
+.rota-painel__titulo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cor-texto-escuro);
+}
+.rota-painel__status {
+  font-size: 0.72rem;
+  color: var(--cor-texto-secundario);
+}
+
+.rota-painel--minimizado {
+  max-height: 94px;
+  min-height: 94px;
+  overflow: hidden;
+  --rota-painel-offset: calc(100% - 94px);
+}
+.rota-painel--minimizado .rota-form,
+.rota-painel--minimizado .rota-resultado {
+  display: none;
 }
 
 /* ══════════════════════════════════════════
@@ -63,7 +113,7 @@
   gap: 0.75rem;
 }
 
-/* Bloco de campos (origem + destino juntos) */
+/* Bloco de campos */
 .rota-campos {
   background: #f9fafb;
   border: 1.5px solid var(--cor-borda);
@@ -93,8 +143,9 @@
   flex-shrink: 0;
 }
 
-.rota-campo__bolinha--a { background: var(--cor-primaria); }
-.rota-campo__bolinha--b { background: #16a34a; }
+.rota-campo__bolinha--a  { background: var(--cor-primaria); }
+.rota-campo__bolinha--b  { background: #16a34a; }
+.rota-campo__bolinha--wp { background: #d97706; }  /* laranja para paradas intermediárias */
 
 .rota-campo__wrap {
   flex: 1;
@@ -142,12 +193,13 @@
   justify-content: center;
   border-left: 1px solid var(--cor-borda);
   transition: color 0.2s, background 0.2s;
+  font-size: 16px;
 }
 
 .rota-campo__btn:hover   { color: var(--cor-primaria); background: #eff6ff; }
 .rota-campo__btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Separador com botão trocar entre os campos */
+/* Separador com botões */
 .rota-campos__separador {
   display: flex;
   align-items: center;
@@ -182,18 +234,32 @@
   transform: rotate(180deg);
 }
 
-/* Confirmações */
-.rota-confirmacao {
-  font-size: 0.77rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  margin-top: -0.25rem;
+/* ── Botão adicionar parada ── */
+.btn-add-parada {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1.5px dashed #d97706;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  font-family: inherit;
 }
 
-.rota-confirmacao--ok   { color: #15803d; background: #f0fdf4; }
-.rota-confirmacao--erro { color: #b91c1c; background: #fef2f2; }
+.btn-add-parada:hover {
+  background: #fef3c7;
+  border-color: #b45309;
+  color: #78350f;
+}
 
-/* Chips de veículo */
+/* ══════════════════════════════════════════
+   CHIPS DE VEÍCULO
+══════════════════════════════════════════ */
 .veiculo-chips {
   display: flex;
   gap: 0.4rem;
@@ -226,7 +292,19 @@
 .veiculo-chip__nome { font-size: 0.8rem; font-weight: 700; color: var(--cor-texto-escuro); }
 .veiculo-chip__sub  { font-size: 0.65rem; color: var(--cor-texto-secundario); }
 
-/* Erro */
+/* ══════════════════════════════════════════
+   CONFIRMAÇÕES / ERRO
+══════════════════════════════════════════ */
+.rota-confirmacao {
+  font-size: 0.77rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  margin-top: -0.25rem;
+}
+
+.rota-confirmacao--ok   { color: #15803d; background: #f0fdf4; }
+.rota-confirmacao--erro { color: #b91c1c; background: #fef2f2; }
+
 .rota-erro {
   font-size: 0.82rem;
   color: #b91c1c;
@@ -236,7 +314,9 @@
   padding: 0.6rem 0.85rem;
 }
 
-/* Botão calcular */
+/* ══════════════════════════════════════════
+   BOTÃO CALCULAR
+══════════════════════════════════════════ */
 .btn-calcular {
   width: 100%;
   padding: 14px;
@@ -256,8 +336,8 @@
   font-family: inherit;
 }
 
-.btn-calcular:hover    { background: #0a52c8; transform: translateY(-1px); }
-.btn-calcular:active   { background: #0845a8; transform: none; }
+.btn-calcular:hover    { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-calcular:active   { filter: brightness(0.95); transform: none; }
 .btn-calcular:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* Spinner dentro de botão */
@@ -272,7 +352,7 @@
 @keyframes spin-btn { to { transform: rotate(360deg); } }
 
 /* ══════════════════════════════════════════
-   RESULTADO (substitui o form após calcular)
+   RESULTADO
 ══════════════════════════════════════════ */
 .rota-resultado {
   display: flex;
@@ -296,7 +376,6 @@
 .rota-resultado__numeros {
   display: flex;
   align-items: center;
-  gap: 0;
   background: #f0f9ff;
   border-radius: 12px;
   padding: 0.75rem 1rem;
@@ -405,5 +484,6 @@
   font-size: 0.7rem; font-weight: 800; color: #fff;
 }
 
-.pin-rota--a { background: var(--cor-primaria); }
-.pin-rota--b { background: #16a34a; }
+.pin-rota--a  { background: var(--cor-primaria); }
+.pin-rota--b  { background: #16a34a; }
+.pin-rota--wp { background: #d97706; }   /* laranja para waypoints */
