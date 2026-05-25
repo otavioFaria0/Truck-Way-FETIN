@@ -1,19 +1,11 @@
 /* ============================================================
-   mapa.css — Truckway
-   Estilos da aba de mapa:
-     • Wrapper que ocupa o espaço entre header e barra inferior
-     • Barra de busca flutuante
-     • Overlay de carregamento
-     • Pin customizado de geolocalização (ponto + pulso)
+   mapa.css — Truckway  (versão melhorada)
+   Acrescentado:
+     • .pin-usuario__caminhao (ícone rotacionável de caminhão)
+     • suporte visual ao modo noturno (tile trocado via JS)
+     • toast de notificação já cobre o estilo base
    ============================================================ */
 
-
-/* ─────────────────────────────────────────
-   Wrapper principal
-   Position fixed para ocupar exatamente o
-   espaço entre o header e a barra inferior,
-   ignorando o padding do .conteudo.
-───────────────────────────────────────── */
 .mapa-wrapper {
   position: fixed;
   top: var(--altura-cabecalho);
@@ -24,16 +16,11 @@
   overflow: hidden;
 }
 
-
-/* ─────────────────────────────────────────
-   Container do Leaflet
-───────────────────────────────────────── */
 #mapa-container {
   width: 100%;
   height: 100%;
-  background: #e8e0d8;   /* cor neutra enquanto os tiles carregam */
+  background: #e8e0d8;
 }
-
 
 /* ─────────────────────────────────────────
    Barra de busca flutuante
@@ -47,7 +34,6 @@
 
   display: flex;
   align-items: center;
-  gap: 0;
 
   width: 92%;
   max-width: 420px;
@@ -55,8 +41,7 @@
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14);
-
-  overflow: hidden;    /* garante que o botão não vaze do border-radius */
+  overflow: hidden;
 }
 
 .busca-mapa input {
@@ -74,7 +59,6 @@
   color: var(--cor-texto-secundario);
 }
 
-/* Botão de busca */
 .busca-mapa button {
   flex-shrink: 0;
   width: 48px;
@@ -83,22 +67,14 @@
   background: var(--cor-primaria);
   color: #fff;
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   transition: background var(--transicao);
 }
 
-.busca-mapa button:hover {
-  background: #0a52c8;
-}
-
-.busca-mapa button:active {
-  background: #0845a8;
-}
-
+.busca-mapa button:hover  { background: #0a52c8; }
+.busca-mapa button:active { background: #0845a8; }
 
 /* ─────────────────────────────────────────
    Overlay de carregamento
@@ -121,35 +97,31 @@
   font-size: 0.9rem;
 }
 
-.mapa-carregando[hidden] {
-  display: none;
-}
+.mapa-carregando[hidden] { display: none; }
 
 .mapa-carregando__spinner {
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   border: 3px solid rgba(12, 97, 235, 0.2);
   border-top-color: var(--cor-primaria);
   border-radius: 50%;
   animation: girar 0.75s linear infinite;
 }
 
-@keyframes girar {
-  to { transform: rotate(360deg); }
-}
-
+@keyframes girar { to { transform: rotate(360deg); } }
 
 /* ─────────────────────────────────────────
    Pin de geolocalização do usuário
-   Estrutura:
-     .pin-usuario
-       .pin-usuario__pulso   ← anel que expande e some
-       .pin-usuario__ponto   ← círculo sólido central
+   Duas variantes:
+     • ponto azul pulsante (sem heading)
+     • ícone de caminhão rotacionável (com heading)
 ───────────────────────────────────────── */
 .pin-usuario {
   position: relative;
   width: 40px;
   height: 40px;
+  /* A rotação é aplicada via style inline pelo JS (heading) */
+  transform-origin: center center;
+  transition: transform 0.4s ease;
 }
 
 .pin-usuario__pulso {
@@ -162,17 +134,23 @@
 
 .pin-usuario__ponto {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-
-  width: 16px;
-  height: 16px;
+  width: 16px; height: 16px;
   border-radius: 50%;
-
   background: var(--cor-primaria);
   border: 3px solid #fff;
   box-shadow: 0 2px 8px rgba(12, 97, 235, 0.5);
+}
+
+/* Ícone de caminhão — aparece quando há heading */
+.pin-usuario__caminhao {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 @keyframes pulso {
@@ -181,24 +159,62 @@
   100% { transform: scale(1.8); opacity: 0;   }
 }
 
+/* ─────────────────────────────────────────
+   Mapa em modo noturno
+───────────────────────────────────────── */
+.mapa-wrapper--noite {
+  background: #2f343d;
+}
 
-/* fim */
+.mapa-wrapper--noite #mapa-container {
+  background: #2f343d;
+  filter: brightness(1.2) contrast(0.88) saturate(1.08);
+}
 
+.mapa-wrapper--noite .busca-mapa {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
+.mapa-wrapper--noite .busca-mapa input {
+  color: #e2e8f0;
+}
+
+.mapa-wrapper--noite .busca-mapa button {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.mapa-wrapper--noite .mapa-carregando {
+  background: rgba(30, 41, 59, 0.88);
+  color: #e2e8f0;
+}
+
+.mapa-wrapper--noite .leaflet-control-attribution,
+.mapa-wrapper--noite .leaflet-popup-content,
+.mapa-wrapper--noite .leaflet-popup-content-wrapper,
+.mapa-wrapper--noite .leaflet-popup-tip {
+  background: rgba(30, 41, 59, 0.92);
+  color: #e2e8f0;
+}
+
+.mapa-wrapper--noite .leaflet-popup-content-wrapper {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.mapa-wrapper--noite .leaflet-popup-content a {
+  color: #93c5fd;
+}
 
 /* ─────────────────────────────────────────
-   Pins de POI (postos e balanças)
+   Pins de POI
 ───────────────────────────────────────── */
 .pin-poi {
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   border: 2.5px solid #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  display: flex; align-items: center; justify-content: center;
   font-size: 1.1rem;
   cursor: pointer;
   transition: transform 0.15s ease;
@@ -208,10 +224,7 @@
 
 .pin-poi--posto   { background: #fff7ed; }
 .pin-poi--balanca { background: #f0f9ff; }
-
-/* Balança inativa fica mais apagada */
 .pin-poi--inativo { opacity: 0.5; filter: grayscale(1); }
-
 
 /* ─────────────────────────────────────────
    Popups dos POIs
@@ -224,32 +237,16 @@
   font-size: 0.85rem;
 }
 
-.popup-poi strong {
-  font-size: 0.9rem;
-  color: #111827;
-}
-
-.popup-poi p {
-  color: #4b5563;
-  margin: 0;
-  line-height: 1.4;
-}
+.popup-poi strong     { font-size: 0.9rem; color: #111827; }
+.popup-poi p          { color: #4b5563; margin: 0; line-height: 1.4; }
 
 .popup-poi__rodovia {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 0.72rem; font-weight: 700; color: #fff;
   background: var(--cor-primaria);
-  padding: 1px 6px;
-  border-radius: 4px;
-  align-self: flex-start;
+  padding: 1px 6px; border-radius: 4px; align-self: flex-start;
 }
 
-.popup-poi__estrelas {
-  color: #d97706;
-  font-size: 0.8rem;
-}
-
+.popup-poi__estrelas      { color: #d97706; font-size: 0.8rem; }
 .popup-poi__status        { font-size: 0.8rem; font-weight: 600; }
 .popup-poi__status--ok    { color: #16a34a; }
 .popup-poi__status--off   { color: #9ca3af; }

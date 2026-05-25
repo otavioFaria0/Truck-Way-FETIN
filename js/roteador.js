@@ -28,6 +28,11 @@ if (overlay) overlay.addEventListener("click", fecharMenuLateral);
 // -------- PAGINAÇÃO -----------
 // ------------------------------
 const conteudo = document.getElementById("conteudo");
+const _paginaHooks = {};
+
+function registrarHook(pagina, callback) {
+  _paginaHooks[pagina] = callback;
+}
 
 async function carregarPagina(nomePagina) {
   try {
@@ -39,6 +44,14 @@ async function carregarPagina(nomePagina) {
     if (conteudo) conteudo.innerHTML = html;
 
     fecharMenuLateral();
+
+    if (window.history && window.history.pushState) {
+      window.history.pushState({ pagina: nomePagina }, '', `#${nomePagina}`);
+    }
+
+    if (typeof _paginaHooks[nomePagina] === 'function') {
+      _paginaHooks[nomePagina]();
+    }
 
     // Executa dinamicamente o mapa se a página for "mapa"
     if (nomePagina === "mapa") {
@@ -90,9 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ─────────────────────────────────────────
 window.addEventListener("popstate", (evento) => {
   const pagina = evento.state?.pagina ?? _resolverPaginaHash();
-  // pushState = false para não duplicar a entrada no histórico
-  _paginaAtual = null; // força o recarregamento
-  carregarPagina(pagina, false);
+  carregarPagina(pagina);
 });
 
 
