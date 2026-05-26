@@ -6,62 +6,62 @@
 // ============================================================
 
 const Dados = {
-
   // ── Pontos de apoio ──────────────────────────────────────
   //  Postos de combustível e estrutura para caminhoneiros
   //  ao longo das principais rodovias de MG/SP.
   pontosDeApoio: [
     {
-      id:        "pa-001",
-      nome:      "Posto Modelo — BR-381 km 47",
-      tipo:      "posto",
-      coords:    [-23.104, -46.549],   // Mairiporã/SP
-      rodovia:   "BR-381",
+      id: "pa-001",
+      nome: "Posto Modelo — BR-381 km 47",
+      tipo: "posto",
+      coords: [-23.104, -46.549], // Mairiporã/SP
+      rodovia: "BR-381",
       descricao: "Pátio p/ caminhões, restaurante 24h, banheiro, ducha",
       avaliacao: 4.3,
     },
     {
-      id:        "pa-002",
-      nome:      "TruckStop Extrema — BR-381 km 231",
-      tipo:      "posto",
-      coords:    [-22.856, -46.318],   // Extrema/MG
-      rodovia:   "BR-381",
+      id: "pa-002",
+      nome: "TruckStop Extrema — BR-381 km 231",
+      tipo: "posto",
+      coords: [-22.856, -46.318], // Extrema/MG
+      rodovia: "BR-381",
       descricao: "GNV, estacionamento coberto, mecânica pesada, restaurante",
       avaliacao: 4.6,
     },
     {
-      id:        "pa-003",
-      nome:      "Posto Cruzeiro do Sul — BR-459 km 12",
-      tipo:      "posto",
-      coords:    [-22.267, -45.715],   // Santa Rita do Sapucaí/MG
-      rodovia:   "BR-459",
+      id: "pa-003",
+      nome: "Posto Cruzeiro do Sul — BR-459 km 12",
+      tipo: "posto",
+      coords: [-22.267, -45.715], // Santa Rita do Sapucaí/MG
+      rodovia: "BR-459",
       descricao: "Diesel S10, estacionamento, lanchonete",
       avaliacao: 4.0,
     },
     {
-      id:        "pa-004",
-      nome:      "Posto Horizonte — BR-459 km 38",
-      tipo:      "posto",
-      coords:    [-22.433, -45.451],   // Itajubá/MG
-      rodovia:   "BR-459",
+      id: "pa-004",
+      nome: "Posto Horizonte — BR-459 km 38",
+      tipo: "posto",
+      coords: [-22.433, -45.451], // Itajubá/MG
+      rodovia: "BR-459",
       descricao: "Pátio amplo, borracharia, restaurante, ducha",
       avaliacao: 4.1,
     },
     {
-      id:        "pa-005",
-      nome:      "Posto Fernão Dias — BR-381 km 112",
-      tipo:      "posto",
-      coords:    [-23.117, -46.556],   // Atibaia/SP
-      rodovia:   "BR-381",
-      descricao: "Estrutura completa: mecânica, restaurante, farmácia, caixa 24h",
+      id: "pa-005",
+      nome: "Posto Fernão Dias — BR-381 km 112",
+      tipo: "posto",
+      coords: [-23.117, -46.556], // Atibaia/SP
+      rodovia: "BR-381",
+      descricao:
+        "Estrutura completa: mecânica, restaurante, farmácia, caixa 24h",
       avaliacao: 4.5,
     },
     {
-      id:        "pa-006",
-      nome:      "Posto Triângulo — SP-330 km 88",
-      tipo:      "posto",
-      coords:    [-22.720, -47.012],   // Campinas/SP
-      rodovia:   "SP-330",
+      id: "pa-006",
+      nome: "Posto Triângulo — SP-330 km 88",
+      tipo: "posto",
+      coords: [-22.72, -47.012], // Campinas/SP
+      rodovia: "SP-330",
       descricao: "Grande pátio, lavagem de caminhões, restaurante",
       avaliacao: 3.9,
     },
@@ -70,39 +70,38 @@ const Dados = {
   // ── Balanças (postos de pesagem) ─────────────────────────
   balancas: [
     {
-      id:        "bal-001",
-      nome:      "Balança DNIT — BR-381 Norte km 238",
-      coords:    [-22.898, -46.259],   // Extrema/MG
-      rodovia:   "BR-381",
+      id: "bal-001",
+      nome: "Balança DNIT — BR-381 Norte km 238",
+      coords: [-22.898, -46.259], // Extrema/MG
+      rodovia: "BR-381",
       descricao: "Pesagem federal, sentido Belo Horizonte",
-      operando:  true,
+      operando: true,
     },
     {
-      id:        "bal-002",
-      nome:      "Balança DNIT — BR-381 Sul km 230",
-      coords:    [-22.862, -46.300],   // Extrema/MG
-      rodovia:   "BR-381",
+      id: "bal-002",
+      nome: "Balança DNIT — BR-381 Sul km 230",
+      coords: [-22.862, -46.3], // Extrema/MG
+      rodovia: "BR-381",
       descricao: "Pesagem federal, sentido São Paulo",
-      operando:  true,
+      operando: true,
     },
     {
-      id:        "bal-003",
-      nome:      "Posto de Pesagem DER — SP-330 km 91",
-      coords:    [-22.748, -47.038],   // Campinas/SP
-      rodovia:   "SP-330",
+      id: "bal-003",
+      nome: "Posto de Pesagem DER — SP-330 km 91",
+      coords: [-22.748, -47.038], // Campinas/SP
+      rodovia: "SP-330",
       descricao: "Pesagem estadual, ambos os sentidos",
-      operando:  false,
+      operando: false,
     },
     {
-      id:        "bal-004",
-      nome:      "Balança PRF — BR-459 km 28",
-      coords:    [-22.362, -45.564],   // Itajubá/MG
-      rodovia:   "BR-459",
+      id: "bal-004",
+      nome: "Balança PRF — BR-459 km 28",
+      coords: [-22.362, -45.564], // Itajubá/MG
+      rodovia: "BR-459",
       descricao: "Operação variável — fiscalização itinerante",
-      operando:  true,
+      operando: true,
     },
   ],
-
 
   // ── Funções utilitárias ──────────────────────────────────
 
@@ -136,5 +135,4 @@ const Dados = {
     }
     return `${s} s`;
   },
-
 };

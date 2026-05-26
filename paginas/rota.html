@@ -6,33 +6,53 @@
   <!-- ══ PAINEL INFERIOR (estilo Google Maps) ══ -->
   <div class="rota-painel" id="rota-painel">
 
-    <!-- Alça para expandir/recolher -->
-    <div class="rota-painel__alca" id="rota-painel-alca"></div>
+    <!-- Cabeçalho com alça de arraste -->
+    <div class="rota-painel__cabecalho">
+      <button id="rota-painel-alca" class="rota-painel__alca" type="button" aria-label="Minimizar painel de rota" aria-expanded="true"></button>
+      <span class="rota-painel__titulo">Planejar rota</span>
+      <span class="rota-painel__status">Clique ou arraste para baixo para minimizar</span>
+    </div>
 
-    <!-- Estado 1: FORMULÁRIO -->
+    <!-- ────────────── Estado 1: FORMULÁRIO ────────────── -->
     <div id="rota-form" class="rota-form">
 
       <!-- Campos de origem e destino -->
       <div class="rota-campos">
 
+        <!-- Origem -->
         <div class="rota-campo">
           <div class="rota-campo__bolinha rota-campo__bolinha--a">A</div>
           <div class="rota-campo__wrap">
             <input id="input-origem" class="rota-campo__input" type="search"
               placeholder="De onde você sai?" autocomplete="off" />
+            <button id="btn-minha-localizacao" class="rota-campo__btn" type="button"
+              aria-label="Usar minha localização" title="Usar minha localização">📍</button>
             <button id="btn-origem-busca" class="rota-campo__btn" type="button" aria-label="Buscar origem">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </button>
           </div>
         </div>
 
+        <!-- Separador com botão trocar -->
         <div class="rota-campos__separador">
           <div class="rota-campos__linha"></div>
-          <button id="btn-trocar" class="rota-campos__trocar" type="button" aria-label="Trocar">
+          <button id="btn-trocar" class="rota-campos__trocar" type="button" aria-label="Trocar origem e destino">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
           </button>
         </div>
 
+        <!-- Lista de paradas intermediárias (waypoints) -->
+        <div id="lista-waypoints"></div>
+
+        <!-- Botão adicionar parada -->
+        <div class="rota-campos__separador" style="padding-left:0;">
+          <button id="btn-add-parada" class="btn-add-parada" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar parada
+          </button>
+        </div>
+
+        <!-- Destino -->
         <div class="rota-campo">
           <div class="rota-campo__bolinha rota-campo__bolinha--b">B</div>
           <div class="rota-campo__wrap">
@@ -45,10 +65,6 @@
         </div>
 
       </div>
-
-      <!-- Confirmações -->
-      <p id="confirmacao-origem" class="rota-confirmacao" hidden></p>
-      <p id="confirmacao-destino" class="rota-confirmacao" hidden></p>
 
       <!-- Chips de veículo -->
       <div class="veiculo-chips" role="radiogroup" aria-label="Tipo de veículo">
@@ -100,7 +116,7 @@
 
     </div>
 
-    <!-- Estado 2: RESULTADO (aparece após calcular) -->
+    <!-- ────────────── Estado 2: RESULTADO ────────────── -->
     <div id="rota-resultado" class="rota-resultado" hidden>
 
       <div class="rota-resultado__topo">
@@ -121,6 +137,7 @@
         </button>
       </div>
 
+      <!-- Trecho A → paradas → B -->
       <div class="rota-resultado__trecho">
         <span class="rota-resultado__ponto rota-resultado__ponto--a">A</span>
         <span class="rota-resultado__cidade" id="resultado-origem-nome">—</span>
@@ -129,8 +146,28 @@
         <span class="rota-resultado__ponto rota-resultado__ponto--b">B</span>
       </div>
 
+      <!-- Waypoints no resultado (aparece se houver paradas) -->
+      <div id="resultado-waypoints" class="rota-resultado__trecho" style="flex-wrap:wrap;gap:4px;" hidden></div>
+
+      <!-- Estimativa de combustível -->
+      <div id="resultado-combustivel" class="rota-resultado__hgv" style="background:#fff7ed;color:#92400e;">
+        ⛽ —
+      </div>
+
       <div class="rota-resultado__hgv">
         ✅ Rota aprovada para caminhão pesado — restrições de peso, altura, largura e comprimento aplicadas
+      </div>
+
+      <!-- Botão iniciar navegação -->
+      <button id="btn-iniciar-nav" class="btn-calcular" type="button"
+        style="background:#16a34a;box-shadow:0 4px 14px rgba(22,163,74,0.3);">
+        🧭 Iniciar Navegação
+      </button>
+
+      <!-- Controles manuais de instrução (acessíveis mesmo sem GPS) -->
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button id="btn-nav-anterior" class="btn-nova-rota" type="button" style="flex:1;">⬅ Anterior</button>
+        <button id="btn-nav-proximo"  class="btn-nova-rota" type="button" style="flex:1;">Próximo ➡</button>
       </div>
 
     </div>

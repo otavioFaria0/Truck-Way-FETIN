@@ -314,16 +314,13 @@ a {
 .conteudo {
   min-height: 100vh;
 
-  padding:
-    calc(var(--altura-cabecalho) + 1.5rem)
-    1rem
+  padding: calc(var(--altura-cabecalho) + 1.5rem) 1rem
     calc(var(--altura-barra-inferior) + 2rem);
 }
 
 /* =========================
    ESTADO INICIAL
 ========================= */
-
 
 /* =========================  
    BARRA INFERIOR
@@ -369,7 +366,7 @@ a {
   align-items: center;
   justify-content: center;
 }
-.item-barra:hover{
+.item-barra:hover {
   color: var(--cor-texto-claro);
   transform: scale(1.1) translateY(-0.1rem);
 }
@@ -381,7 +378,7 @@ a {
   display: block;
   filter: invert(100%);
 }
-.rota img{
+.rota img {
   margin-top: 0.3rem;
   width: 1.5rem;
   height: 1.5rem;
@@ -415,8 +412,8 @@ a {
   transform: scale(1.1) translateY(-0.1rem);
 }
 
-.item-barra--ativo img{
-  filter: invert(100%) drop-shadow(0 0 4px var(--cor-texto-claro));   
+.item-barra--ativo img {
+  filter: invert(100%) drop-shadow(0 0 4px var(--cor-texto-claro));
 }
 
 /* =========================
@@ -443,6 +440,7 @@ a {
   }
 
   .barra-inferior {
+    /* Comportamento original: barra compacta e centralizada em telas maiores */
     width: 420px;
     left: 50%;
     transform: translateX(-50%);
