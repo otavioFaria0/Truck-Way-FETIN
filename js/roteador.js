@@ -136,3 +136,43 @@ window.Roteador = Roteador;
 document.addEventListener("DOMContentLoaded", () => {
   carregarPagina(_resolverPaginaHash(), false);
 });
+const botaoPerfil = document.getElementById("botaoPerfil");
+
+const menuPerfil = document.getElementById("menuPerfil");
+
+botaoPerfil.addEventListener("click", function () {
+
+    if (menuPerfil.style.display === "flex") {
+
+        menuPerfil.style.display = "none";
+
+    } else {
+
+        menuPerfil.style.display = "flex";
+
+    }
+
+});
+
+document.addEventListener("click", function (event) {
+
+    if (
+        !botaoPerfil.contains(event.target) &&
+        !menuPerfil.contains(event.target)
+    ) {
+
+        menuPerfil.style.display = "none";
+
+    }
+
+});
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", function () {
+
+    localStorage.removeItem("logado");
+
+    window.location.href = "paginas/teste.html";
+
+});

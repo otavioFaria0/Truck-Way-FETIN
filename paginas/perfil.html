@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Truckway - Perfil</title>
+
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/perfil.css">
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- HEADER -->
+
+        <header class="cabecalho">
+
+            <button
+                class="botao-icone"
+                type="button"
+            >
+                <img
+                    src="../conteudos/icones/barra-lateral.png"
+                    alt=""
+                >
+            </button>
+
+            <a href="../index.html" class="marca">
+
+                <span class="marca__logo">
+                    TW
+                </span>
+
+                <span class="marca__nome">
+                    Truckway
+                </span>
+
+            </a>
+
+            <div class="acoes-cabecalho">
+
+                <button
+                    class="botao-icone"
+                    type="button"
+                >
+                    <img
+                        src="../conteudos/icones/sino.png"
+                        alt=""
+                    >
+                </button>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTEÚDO -->
+
+        <main class="perfil-main">
+
+            <div class="foto-area">
+
+                <div class="foto-wrapper">
+
+                    <img
+                        id="fotoPerfil"
+                        class="foto-perfil"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <section class="perfil-formulario">
+
+                <label
+                    for="inputFoto"
+                    class="botao-upload"
+                >
+                    Escolher Foto
+                </label>
+
+                <input
+                    type="file"
+                    id="inputFoto"
+                    accept="image/png, image/jpeg, image/webp"
+                    hidden
+                >
+
+                <input
+                    type="text"
+                    id="usuario"
+                    placeholder="Usuário"
+                >
+
+                <input
+                    type="tel"
+                    id="telefone"
+                    placeholder="Telefone"
+                >
+
+                <input
+                    type="password"
+                    id="senha"
+                    placeholder="Senha"
+                >
+
+                <button class="perfil-botao" id="salvarPerfil">
+                    Salvar Alterações
+                </button>
+
+            </section>
+
+        </main>
+
+
+
+        <!-- BARRA INFERIOR -->
+
+        <footer class="barra-inferior">
+
+            <button
+                class="item-barra"
+                onclick="window.location.href='../index.html'"
+            >
+
+                <span class="item-barra__icone">
+
+                    <img
+                        src="../conteudos/icones/home.png"
+                        alt=""
+                    >
+
+                </span>
+
+                <span>Início</span>
+
+            </button>
+
+
+            <button class="item-barra">
+
+                <span class="item-barra__icone">
+
+                    <img
+                        src="../conteudos/icones/rota.png"
+                        alt=""
+                    >
+
+                </span>
+
+                <span>Rota</span>
+
+            </button>
+
+
+            <button class="item-barra">
+
+                <span class="item-barra__icone">
+
+                    <img
+                        src="../conteudos/icones/brasil.png"
+                        alt=""
+                    >
+
+                </span>
+
+                <span>Mapa</span>
+
+            </button>
+
+
+            <button class="item-barra">
+
+                <span class="item-barra__icone">
+
+                    <img
+                        src="../conteudos/icones/apoio.png"
+                        alt=""
+                    >
+
+                </span>
+
+                <span>Apoio</span>
+
+            </button>
+
+        </footer>
+
+    </div>
+
+
+
+    <!-- EDITOR -->
+
+    <div
+        class="editor-imagem"
+        id="editorImagem"
+    >
+
+        <div class="editor-box">
+
+            <h2>
+                Editar Foto
+            </h2>
+
+            <div class="area-preview">
+
+                <div class="moldura-preview">
+
+                    <img id="previewImagem">
+
+                </div>
+
+            </div>
+
+            <input
+                type="range"
+                id="zoomImagem"
+                min="1"
+                max="3"
+                step="0.1"
+                value="1"
+            >
+
+            <button class="perfil-botao" id="salvarImagem">
+
+                Salvar Foto
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="../js/perfil.js"></script>
+
+</body>
+
+</html>

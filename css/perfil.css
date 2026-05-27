@@ -1,0 +1,333 @@
+/* =========================================================
+   PERFIL.CSS — TRUCKWAY
+========================================================= */
+
+
+/* ÁREA PRINCIPAL */
+
+.perfil-main {
+
+    padding: 1rem;
+
+    padding-bottom: 7rem;
+}
+
+
+
+/* FOTO DE PERFIL */
+
+.foto-area {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 1.5rem;
+}
+
+.foto-wrapper {
+
+    width: 150px;
+
+    height: 150px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    border: 4px solid #0951bd;
+
+    background: #d1d5db;
+
+    position: relative;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.12);
+}
+
+.foto-perfil {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+}
+
+
+
+/* FORMULÁRIO */
+
+.perfil-formulario {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+}
+
+.perfil-formulario input {
+
+    width: 100%;
+
+    padding: 1rem;
+
+    border: none;
+
+    border-radius: 16px;
+
+    background: white;
+
+    font-size: 1rem;
+
+    outline: none;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.08);
+
+    font-family: inherit;
+}
+
+.perfil-formulario input:focus {
+
+    border:
+        2px solid #0951bd;
+}
+
+
+
+/* BOTÃO ESCOLHER FOTO */
+
+.botao-upload {
+
+    width: 100%;
+
+    padding: 1rem;
+
+    border-radius: 16px;
+
+    background: #0951bd;
+
+    color: white;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    box-shadow:
+        0 4px 12px rgba(9,81,189,0.25);
+}
+
+.botao-upload:hover {
+
+    transform: translateY(-2px);
+}
+
+
+
+/* BOTÕES DO PERFIL */
+
+.perfil-botao {
+
+    width: 100%;
+
+    padding: 1rem;
+
+    border: none;
+
+    border-radius: 16px;
+
+    background: #0a1628;
+
+    color: white;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    font-family: inherit;
+}
+
+.perfil-botao:hover {
+
+    transform: translateY(-2px);
+
+    background: #13233d;
+}
+
+
+
+/* EDITOR DE IMAGEM */
+
+.editor-imagem {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.85);
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 99999;
+
+    backdrop-filter: blur(5px);
+}
+
+
+
+/* CAIXA DO EDITOR */
+
+.editor-box {
+
+    width: 90%;
+
+    max-width: 400px;
+
+    background: white;
+
+    border-radius: 24px;
+
+    padding: 1.5rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+}
+
+.editor-box h2 {
+
+    text-align: center;
+
+    color: #111827;
+
+    font-size: 1.5rem;
+
+    font-family: 'Barlow Condensed', sans-serif;
+}
+
+
+
+/* PREVIEW DA FOTO */
+
+.area-preview {
+
+    display: flex;
+
+    justify-content: center;
+}
+
+.moldura-preview {
+
+    width: 220px;
+
+    height: 220px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    border: 4px solid #0951bd;
+
+    background: black;
+
+    position: relative;
+}
+
+#previewImagem {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    cursor: grab;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+}
+
+
+
+/* SLIDER */
+
+#zoomImagem {
+
+    width: 100%;
+
+    cursor: pointer;
+}
+/* CORREÇÃO DOS ÍCONES DO HEADER E FOOTER */
+
+.cabecalho .botao-icone img {
+
+    width: 24px !important;
+
+    height: 24px !important;
+
+    object-fit: contain;
+}
+
+.item-barra__icone img {
+
+    width: 24px !important;
+
+    height: 24px !important;
+
+    object-fit: contain;
+}
+
+
+
+/* TAMANHO DOS BOTÕES DO HEADER */
+
+.cabecalho .botao-icone {
+
+    width: 42px !important;
+
+    height: 42px !important;
+
+    padding: 0 !important;
+}
+
+
+
+/* TAMANHO DOS BOTÕES DA BARRA */
+
+.barra-inferior .item-barra {
+
+    width: auto !important;
+
+    height: auto !important;
+}
