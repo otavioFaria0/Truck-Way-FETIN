@@ -1,6 +1,127 @@
-<h1>teste de avaliações</h1>
-<p>
-  Este é um teste de avaliações para verificar se a paginação esta funcionando
-  corretamente.
-</p>
-<p>Se você está vendo esta mensagem, então a paginação está funcionando!</p>
+<!--
+  avaliacoes.html - Fragmento carregado pelo roteador dentro de #conteudo.
+  As avaliacoes sao salvas no navegador pelo js/paginas/avaliacoes.js.
+-->
+
+<section class="avaliacoes" aria-labelledby="avaliacoes-titulo">
+  <header class="avaliacoes__hero">
+    <div>
+      <p class="avaliacoes__etiqueta">Comunidade Truckway</p>
+      <h1 id="avaliacoes-titulo">Avaliacoes da estrada</h1>
+      <p>
+        Registre experiencias em postos, balancas, restaurantes e trechos da
+        viagem para ajudar outros motoristas.
+      </p>
+    </div>
+
+    <div class="avaliacoes__resumo" aria-label="Resumo das avaliacoes">
+      <div>
+        <strong id="avaliacoes-total">0</strong>
+        <span>avaliacoes</span>
+      </div>
+      <div>
+        <strong id="avaliacoes-media">0.0</strong>
+        <span>media</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="avaliacoes__layout">
+    <section class="avaliacoes__painel" aria-labelledby="nova-avaliacao-titulo">
+      <h2 id="nova-avaliacao-titulo">Criar avaliacao</h2>
+
+      <form id="avaliacao-form" class="avaliacao-form">
+        <label class="avaliacao-campo">
+          <span>Local avaliado</span>
+          <input
+            id="avaliacao-local"
+            name="local"
+            type="text"
+            maxlength="80"
+            placeholder="Ex: Posto Modelo - BR-381 km 47"
+            required
+          />
+        </label>
+
+        <div class="avaliacao-form__linha">
+          <label class="avaliacao-campo">
+            <span>Tipo</span>
+            <select id="avaliacao-tipo" name="tipo" required>
+              <option value="Posto">Posto</option>
+              <option value="Balanca">Balanca</option>
+              <option value="Restaurante">Restaurante</option>
+              <option value="Rodovia">Rodovia</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+
+          <label class="avaliacao-campo">
+            <span>Rodovia</span>
+            <input
+              id="avaliacao-rodovia"
+              name="rodovia"
+              type="text"
+              maxlength="24"
+              placeholder="BR-381"
+            />
+          </label>
+        </div>
+
+        <div class="avaliacao-campo">
+          <span>Nota</span>
+          <div class="avaliacao-notas" role="radiogroup" aria-label="Nota da avaliacao">
+            <button class="avaliacao-nota" type="button" data-nota="1" aria-pressed="false">1</button>
+            <button class="avaliacao-nota" type="button" data-nota="2" aria-pressed="false">2</button>
+            <button class="avaliacao-nota" type="button" data-nota="3" aria-pressed="false">3</button>
+            <button class="avaliacao-nota" type="button" data-nota="4" aria-pressed="false">4</button>
+            <button class="avaliacao-nota avaliacao-nota--ativa" type="button" data-nota="5" aria-pressed="true">5</button>
+          </div>
+          <input id="avaliacao-nota" name="nota" type="hidden" value="5" />
+        </div>
+
+        <label class="avaliacao-campo">
+          <span>Comentario</span>
+          <textarea
+            id="avaliacao-comentario"
+            name="comentario"
+            rows="4"
+            maxlength="260"
+            placeholder="Conte o que encontrou no local..."
+            required
+          ></textarea>
+        </label>
+
+        <label class="avaliacao-campo">
+          <span>Nome do motorista</span>
+          <input
+            id="avaliacao-motorista"
+            name="motorista"
+            type="text"
+            maxlength="40"
+            placeholder="Opcional"
+          />
+        </label>
+
+        <div class="avaliacao-form__acoes">
+          <button class="avaliacao-btn avaliacao-btn--primario" type="submit">
+            Salvar avaliacao
+          </button>
+          <button class="avaliacao-btn" type="reset">Limpar</button>
+        </div>
+
+        <p id="avaliacao-feedback" class="avaliacao-feedback" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="avaliacoes__painel" aria-labelledby="lista-avaliacoes-titulo">
+      <div class="avaliacoes__topo-lista">
+        <div>
+          <h2 id="lista-avaliacoes-titulo">Avaliacoes salvas</h2>
+          <p>Ficam guardadas neste navegador usando localStorage.</p>
+        </div>
+      </div>
+
+      <div id="avaliacoes-lista" class="avaliacoes__lista"></div>
+    </section>
+  </div>
+</section>
