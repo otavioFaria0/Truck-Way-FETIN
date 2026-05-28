@@ -5,38 +5,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Cadastro</title>
+    <title>Truckway - Cadastro</title>
 
     <link rel="stylesheet" href="../css/login.css">
 </head>
 
 <body>
+    <main class="auth-page">
+        <section class="login-box login-box--cadastro" aria-labelledby="cadastro-titulo">
+            <a class="auth-brand" href="../index.html" aria-label="Voltar para Truckway">
+                <span class="auth-brand__logo">TW</span>
+                <span>Truckway</span>
+            </a>
 
-    <div class="login-box">
+            <div class="auth-heading">
+                <h1 id="cadastro-titulo">Criar Conta</h1>
+                <p>Crie seu acesso para usar o Truckway com seus dados de motorista.</p>
+            </div>
 
-        <h1>Criar Conta</h1>
+            <form id="signupForm" class="auth-form">
+                <label>
+                    <span>Nome completo</span>
+                    <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" required>
+                </label>
 
-        <input type="text" placeholder="Usuário" id="usuario">
+                <label>
+                    <span>Usuario</span>
+                    <input type="text" id="usuario" placeholder="seu.usuario" autocomplete="username" required>
+                </label>
 
-        <div class="senha-box">
+                <label>
+                    <span>E-mail</span>
+                    <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" required>
+                </label>
 
-            <input type="password" placeholder="Senha" id="senha">
+                <label>
+                    <span>Senha</span>
+                    <div class="senha-box">
+                        <input
+                            type="password"
+                            placeholder="Minimo de 6 caracteres"
+                            id="senha"
+                            autocomplete="new-password"
+                            required
+                        >
 
-            <span id="olho">👁️</span>
+                        <button id="olho" type="button" aria-label="Mostrar senha">👁️</button>
+                    </div>
+                </label>
 
-        </div>
+                <label>
+                    <span>Confirmar senha</span>
+                    <input
+                        type="password"
+                        id="confirmarSenha"
+                        placeholder="Repita a senha"
+                        autocomplete="new-password"
+                        required
+                    >
+                </label>
 
-        <button id="cadastrar">Cadastrar</button>
+                <button class="auth-submit" id="cadastrar" type="submit">Cadastrar</button>
+                <p id="signupFeedback" class="auth-feedback" aria-live="polite"></p>
+            </form>
 
-        <p>
-            Já possui conta?
-            <a href="teste.html">Entrar agora</a>
-        </p>
+            <p class="auth-link">
+                Ja possui conta?
+                <a href="login.html">Entrar agora</a>
+            </p>
+        </section>
+    </main>
 
-    </div>
-
+    <script src="../js/auth.js"></script>
     <script src="../js/paginas/signup.js"></script>
-
 </body>
 
 </html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Truckway - Login</title>
+
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+    <main class="auth-page">
+        <section class="login-box" aria-labelledby="login-titulo">
+            <a class="auth-brand" href="../index.html" aria-label="Voltar para Truckway">
+                <span class="auth-brand__logo">TW</span>
+                <span>Truckway</span>
+            </a>
+
+            <div class="auth-heading">
+                <h1 id="login-titulo">Entrar</h1>
+                <p>Acesse sua conta para salvar perfil, rotas e avaliacoes.</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <label>
+                    <span>Usuario ou e-mail</span>
+                    <input
+                        type="text"
+                        id="loginUsuario"
+                        placeholder="seu.usuario"
+                        autocomplete="username"
+                        required
+                    >
+                </label>
+
+                <label>
+                    <span>Senha</span>
+                    <div class="senha-box">
+                        <input
+                            type="password"
+                            placeholder="Sua senha"
+                            id="senha"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button id="olho" type="button" aria-label="Mostrar senha">👁️</button>
+                    </div>
+                </label>
+
+                <button class="auth-submit" id="entrar" type="submit">Entrar</button>
+                <p id="loginFeedback" class="auth-feedback" aria-live="polite"></p>
+            </form>
+
+            <p class="auth-link">
+                Ainda nao tem conta?
+                <a href="signup.html">Cadastre-se agora</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/paginas/login.js"></script>
+</body>
+
+</html>

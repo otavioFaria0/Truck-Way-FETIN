@@ -2,251 +2,153 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Truckway - Perfil</title>
 
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/perfil.css">
-
 </head>
 
 <body>
-
     <div class="app">
-
-        <!-- HEADER -->
-
         <header class="cabecalho">
-
-            <button
-                class="botao-icone"
-                type="button"
-            >
-                <img
-                    src="../conteudos/icones/barra-lateral.png"
-                    alt=""
-                >
-            </button>
-
-            <a href="../index.html" class="marca">
-
-                <span class="marca__logo">
-                    TW
-                </span>
-
-                <span class="marca__nome">
-                    Truckway
-                </span>
-
+            <a href="../index.html" class="marca marca--perfil" aria-label="Voltar para a pagina inicial">
+                <span class="marca__logo">TW</span>
+                <span class="marca__nome">Truckway</span>
             </a>
 
-            <div class="acoes-cabecalho">
-
-                <button
-                    class="botao-icone"
-                    type="button"
-                >
-                    <img
-                        src="../conteudos/icones/sino.png"
-                        alt=""
-                    >
-                </button>
-
-            </div>
-
+            <button class="perfil-sair" id="perfilSair" type="button">Sair</button>
         </header>
 
-
-
-        <!-- CONTEÚDO -->
-
         <main class="perfil-main">
-
-            <div class="foto-area">
-
-                <div class="foto-wrapper">
-
-                    <img
-                        id="fotoPerfil"
-                        class="foto-perfil"
-                    >
-
+            <section class="perfil-hero" aria-labelledby="perfil-titulo">
+                <div class="perfil-avatar">
+                    <img id="fotoPerfil" alt="" hidden>
+                    <span id="avatarIniciais">TW</span>
                 </div>
 
-            </div>
-
-
-            <section class="perfil-formulario">
-
-                <label
-                    for="inputFoto"
-                    class="botao-upload"
-                >
-                    Escolher Foto
-                </label>
-
-                <input
-                    type="file"
-                    id="inputFoto"
-                    accept="image/png, image/jpeg, image/webp"
-                    hidden
-                >
-
-                <input
-                    type="text"
-                    id="usuario"
-                    placeholder="Usuário"
-                >
-
-                <input
-                    type="tel"
-                    id="telefone"
-                    placeholder="Telefone"
-                >
-
-                <input
-                    type="password"
-                    id="senha"
-                    placeholder="Senha"
-                >
-
-                <button class="perfil-botao" id="salvarPerfil">
-                    Salvar Alterações
-                </button>
-
+                <div class="perfil-hero__texto">
+                    <p id="perfilTipo">Motorista</p>
+                    <h1 id="perfil-titulo">Meu Perfil</h1>
+                    <span id="perfilEmail">usuario@email.com</span>
+                </div>
             </section>
 
+            <section class="perfil-resumo" aria-label="Resumo do usuario">
+                <div>
+                    <span>Conta</span>
+                    <strong id="perfilConta">Motorista</strong>
+                </div>
+                <div>
+                    <span>Usuario</span>
+                    <strong id="perfilUsuarioResumo">usuario</strong>
+                </div>
+                <div>
+                    <span>Desde</span>
+                    <strong id="perfilCriadoEm">--/--/----</strong>
+                </div>
+            </section>
+
+            <form id="perfilForm" class="perfil-formulario">
+                <section class="perfil-painel" aria-labelledby="dados-conta-titulo">
+                    <div class="perfil-painel__topo">
+                        <h2 id="dados-conta-titulo">Dados da conta</h2>
+                        <label class="botao-upload" for="inputFoto">Trocar foto</label>
+                        <input type="file" id="inputFoto" accept="image/png, image/jpeg, image/webp" hidden>
+                    </div>
+
+                    <div class="perfil-grid">
+                        <label>
+                            <span>Nome completo</span>
+                            <input type="text" id="nome" autocomplete="name" required>
+                        </label>
+
+                        <label>
+                            <span>Usuario</span>
+                            <input type="text" id="usuario" autocomplete="username" required>
+                        </label>
+
+                        <label>
+                            <span>E-mail</span>
+                            <input type="email" id="email" autocomplete="email" required>
+                        </label>
+
+                        <label>
+                            <span>Telefone</span>
+                            <input type="tel" id="telefone" autocomplete="tel" placeholder="(00) 00000-0000">
+                        </label>
+                    </div>
+                </section>
+
+                <section class="perfil-painel" aria-labelledby="dados-profissionais-titulo">
+                    <h2 id="dados-profissionais-titulo">Dados profissionais</h2>
+
+                    <div class="perfil-grid">
+                        <label>
+                            <span>Empresa</span>
+                            <input type="text" id="empresa" placeholder="Ex: Autonomo ou transportadora">
+                        </label>
+
+                        <label>
+                            <span>CNH</span>
+                            <input type="text" id="cnh" placeholder="Ex: Categoria E">
+                        </label>
+
+                        <label class="perfil-grid__cheio">
+                            <span>Caminhao</span>
+                            <input type="text" id="caminhao" placeholder="Ex: Volvo FH 540">
+                        </label>
+                    </div>
+
+                    <label class="perfil-bio">
+                        <span>Sobre voce</span>
+                        <textarea id="bio" rows="4" maxlength="220" placeholder="Conte um pouco sobre sua rotina na estrada"></textarea>
+                    </label>
+                </section>
+
+                <section class="perfil-painel" aria-labelledby="seguranca-titulo">
+                    <h2 id="seguranca-titulo">Seguranca</h2>
+
+                    <label>
+                        <span>Nova senha</span>
+                        <input type="password" id="senha" autocomplete="new-password" placeholder="Deixe vazio para manter a atual">
+                    </label>
+                </section>
+
+                <div class="perfil-acoes">
+                    <button class="perfil-botao" type="submit">Salvar alteracoes</button>
+                    <p id="perfilFeedback" class="perfil-feedback" aria-live="polite"></p>
+                </div>
+            </form>
         </main>
 
+        <footer class="barra-inferior" role="navigation" aria-label="Barra inferior">
+            <a class="item-barra home" href="../index.html#inicio">
+                <span class="item-barra__icone"><img src="../conteudos/icones/home.png" alt=""></span>
+                <span>Inicio</span>
+            </a>
 
-
-        <!-- BARRA INFERIOR -->
-
-        <footer class="barra-inferior">
-
-            <button
-                class="item-barra"
-                onclick="window.location.href='../index.html'"
-            >
-
-                <span class="item-barra__icone">
-
-                    <img
-                        src="../conteudos/icones/home.png"
-                        alt=""
-                    >
-
-                </span>
-
-                <span>Início</span>
-
-            </button>
-
-
-            <button class="item-barra">
-
-                <span class="item-barra__icone">
-
-                    <img
-                        src="../conteudos/icones/rota.png"
-                        alt=""
-                    >
-
-                </span>
-
+            <a class="item-barra rota" href="../index.html#rota">
+                <span class="item-barra__icone"><img src="../conteudos/icones/rota.png" alt=""></span>
                 <span>Rota</span>
+            </a>
 
-            </button>
-
-
-            <button class="item-barra">
-
-                <span class="item-barra__icone">
-
-                    <img
-                        src="../conteudos/icones/brasil.png"
-                        alt=""
-                    >
-
-                </span>
-
+            <a class="item-barra mapa" href="../index.html#mapa">
+                <span class="item-barra__icone"><img src="../conteudos/icones/brasil.png" alt=""></span>
                 <span>Mapa</span>
+            </a>
 
-            </button>
-
-
-            <button class="item-barra">
-
-                <span class="item-barra__icone">
-
-                    <img
-                        src="../conteudos/icones/apoio.png"
-                        alt=""
-                    >
-
-                </span>
-
+            <a class="item-barra" href="../index.html#apoio">
+                <span class="item-barra__icone apoio"><img src="../conteudos/icones/apoio.png" alt=""></span>
                 <span>Apoio</span>
-
-            </button>
-
+            </a>
         </footer>
-
     </div>
 
-
-
-    <!-- EDITOR -->
-
-    <div
-        class="editor-imagem"
-        id="editorImagem"
-    >
-
-        <div class="editor-box">
-
-            <h2>
-                Editar Foto
-            </h2>
-
-            <div class="area-preview">
-
-                <div class="moldura-preview">
-
-                    <img id="previewImagem">
-
-                </div>
-
-            </div>
-
-            <input
-                type="range"
-                id="zoomImagem"
-                min="1"
-                max="3"
-                step="0.1"
-                value="1"
-            >
-
-            <button class="perfil-botao" id="salvarImagem">
-
-                Salvar Foto
-
-            </button>
-
-        </div>
-
-    </div>
-
+    <script src="../js/auth.js"></script>
     <script src="../js/perfil.js"></script>
-
 </body>
 
 </html>

@@ -29,32 +29,49 @@ if (overlay) overlay.addEventListener("click", fecharMenuLateral);
 // ------------------------------
 const conteudo = document.getElementById("conteudo");
 const _paginaHooks = {};
+const PAGINAS_VALIDAS = ["inicio", "rota", "mapa", "apoio", "avaliacoes", "sobre"];
 
 function registrarHook(pagina, callback) {
   _paginaHooks[pagina] = callback;
 }
 
-async function carregarPagina(nomePagina) {
+function atualizarNavegacaoAtiva(nomePagina) {
+  document.querySelectorAll("[data-pagina]").forEach((botao) => {
+    botao.classList.toggle("item-barra--ativo", botao.dataset.pagina === nomePagina);
+  });
+}
+
+async function carregarPagina(nomePagina, opcoes = {}) {
+  const pagina = PAGINAS_VALIDAS.includes(nomePagina) ? nomePagina : "inicio";
+
   try {
-    const resposta = await fetch(`paginas/${nomePagina}.html`);
+    const resposta = await fetch(`paginas/${pagina}.html`);
     if (!resposta.ok)
-      throw new Error(`Erro ao carregar a página: ${nomePagina}`);
+      throw new Error(`Erro ao carregar a página: ${pagina}`);
 
     const html = await resposta.text();
     if (conteudo) conteudo.innerHTML = html;
 
     fecharMenuLateral();
+    atualizarNavegacaoAtiva(pagina);
 
-    if (window.history && window.history.pushState) {
-      window.history.pushState({ pagina: nomePagina }, '', `#${nomePagina}`);
+    if (
+      opcoes.atualizarHistorico !== false &&
+      window.history &&
+      window.history.pushState &&
+      location.hash !== `#${pagina}`
+    ) {
+      window.history.pushState({ pagina }, "", `#${pagina}`);
     }
 
-    if (typeof _paginaHooks[nomePagina] === 'function') {
-      _paginaHooks[nomePagina]();
+    const hookPagina = _paginaHooks[pagina];
+
+    if (typeof hookPagina === "function") {
+      hookPagina();
     }
 
-    // Executa dinamicamente o mapa se a página for "mapa"
-    if (nomePagina === "mapa") {
+    // Fallback: carrega a lógica do mapa se o hook ainda não foi registrado.
+    if (pagina === "mapa" && typeof hookPagina !== "function") {
       if (!document.querySelector('script[src="js/mapas.js"]')) {
         const scriptMapa = document.createElement("script");
         scriptMapa.src = "js/mapas.js";
@@ -65,9 +82,9 @@ async function carregarPagina(nomePagina) {
           }
         };
         document.body.appendChild(scriptMapa);
-      } else if (typeof inicializarMapa === "function") {
+      } else if (typeof window.inicializarMapa === "function") {
         // Se o script já existir, apenas reinicia a lógica do mapa
-        inicializarMapa();
+        window.inicializarMapa();
       }
     }
   } catch (erro) {
@@ -75,35 +92,12 @@ async function carregarPagina(nomePagina) {
   }
 }
 
-// Inicializa os escutadores de clique assim que o DOM estiver pronto
-document.addEventListener("DOMContentLoaded", () => {
-  const botoes = document.querySelectorAll("[data-pagina]");
-
-  botoes.forEach((botao) => {
-    botao.addEventListener("click", () => {
-      const pagina = botao.dataset.pagina;
-      carregarPagina(pagina);
-
-      botao.classList.add("item-barra--ativo");
-      botoes.forEach((b) => {
-        if (b !== botao) {
-          b.classList.remove("item-barra--ativo");
-        }
-      });
-    });
-  });
-
-  // Carrega a página inicial por padrão
-  carregarPagina("inicio");
-});
-
-
 // ─────────────────────────────────────────
 //  Suporte ao botão Voltar/Avançar do navegador
 // ─────────────────────────────────────────
 window.addEventListener("popstate", (evento) => {
   const pagina = evento.state?.pagina ?? _resolverPaginaHash();
-  carregarPagina(pagina);
+  carregarPagina(pagina, { atualizarHistorico: false });
 });
 
 
@@ -112,8 +106,7 @@ window.addEventListener("popstate", (evento) => {
 // ─────────────────────────────────────────
 function _resolverPaginaHash() {
   const hash = location.hash.replace("#", "").trim();
-  const paginasValidas = ["inicio", "rota", "mapa", "apoio", "avaliacoes", "sobre"];
-  return paginasValidas.includes(hash) ? hash : "inicio";
+  return PAGINAS_VALIDAS.includes(hash) ? hash : "inicio";
 }
 
 
@@ -134,13 +127,19 @@ window.Roteador = Roteador;
 //  a página estando em #mapa)
 // ─────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
-  carregarPagina(_resolverPaginaHash(), false);
+  document.querySelectorAll("[data-pagina]").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      carregarPagina(botao.dataset.pagina);
+    });
+  });
+
+  carregarPagina(_resolverPaginaHash(), { atualizarHistorico: false });
 });
 const botaoPerfil = document.getElementById("botaoPerfil");
 
 const menuPerfil = document.getElementById("menuPerfil");
 
-botaoPerfil.addEventListener("click", function () {
+botaoPerfil?.addEventListener("click", function () {
 
     if (menuPerfil.style.display === "flex") {
 
@@ -155,6 +154,7 @@ botaoPerfil.addEventListener("click", function () {
 });
 
 document.addEventListener("click", function (event) {
+    if (!botaoPerfil || !menuPerfil) return;
 
     if (
         !botaoPerfil.contains(event.target) &&
@@ -169,10 +169,10 @@ document.addEventListener("click", function (event) {
 
 const logoutBtn = document.getElementById("logoutBtn");
 
-logoutBtn.addEventListener("click", function () {
+logoutBtn?.addEventListener("click", function () {
 
-    localStorage.removeItem("logado");
+    window.TruckwayAuth?.sair();
 
-    window.location.href = "paginas/teste.html";
+    window.location.href = "paginas/login.html";
 
 });

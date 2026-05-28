@@ -1,46 +1,40 @@
-const botao = document.querySelector("button");
-
+const form = document.getElementById("loginForm");
 const senha = document.getElementById("senha");
-
 const olho = document.getElementById("olho");
+const usuarioInput = document.getElementById("loginUsuario");
+const feedback = document.getElementById("loginFeedback");
 
-const usuarioInput = document.querySelector('input[type="text"]');
-
-olho.addEventListener("click", function () {
-
-    if (senha.type === "password") {
-
-        senha.type = "text";
-
-    } else {
-
-        senha.type = "password";
-
-    }
-
+olho?.addEventListener("click", function () {
+    const mostrando = senha.type === "text";
+    senha.type = mostrando ? "password" : "text";
+    olho.setAttribute("aria-label", mostrando ? "Mostrar senha" : "Ocultar senha");
 });
 
-botao.addEventListener("click", function () {
+form?.addEventListener("submit", function (evento) {
+    evento.preventDefault();
 
-    const usuarioSalvo = localStorage.getItem("usuario");
+    const usuarioDigitado = usuarioInput.value.trim();
+    const senhaDigitada = senha.value;
 
-    const senhaSalva = localStorage.getItem("senha");
+    feedback.textContent = "";
+    feedback.classList.remove("auth-feedback--ok");
 
-    if (
-        usuarioInput.value === usuarioSalvo &&
-        senha.value === senhaSalva
-    ) {
-
-        localStorage.setItem("logado", "true");
-
-        alert("Login realizado!");
-
-        window.location.href = "../index.html";
-
-    } else {
-
-        alert("Usuário ou senha incorretos!");
-
+    if (!usuarioDigitado || !senhaDigitada) {
+        feedback.textContent = "Preencha usuario e senha.";
+        return;
     }
 
+    const resultado = window.TruckwayAuth.entrar(usuarioDigitado, senhaDigitada);
+
+    if (!resultado.ok) {
+        feedback.textContent = resultado.mensagem;
+        return;
+    }
+
+    feedback.textContent = "Login realizado. Redirecionando...";
+    feedback.classList.add("auth-feedback--ok");
+
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 500);
 });

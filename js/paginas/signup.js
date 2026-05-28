@@ -1,35 +1,46 @@
-const botao = document.getElementById("cadastrar");
-
+const form = document.getElementById("signupForm");
+const nome = document.getElementById("nome");
 const usuario = document.getElementById("usuario");
-
+const email = document.getElementById("email");
 const senha = document.getElementById("senha");
-
+const confirmarSenha = document.getElementById("confirmarSenha");
 const olho = document.getElementById("olho");
+const feedback = document.getElementById("signupFeedback");
 
-olho.addEventListener("click", function () {
-
-    if (senha.type === "password") {
-
-        senha.type = "text";
-
-    } else {
-
-        senha.type = "password";
-
-    }
-
+olho?.addEventListener("click", function () {
+    const mostrando = senha.type === "text";
+    senha.type = mostrando ? "password" : "text";
+    confirmarSenha.type = mostrando ? "password" : "text";
+    olho.setAttribute("aria-label", mostrando ? "Mostrar senha" : "Ocultar senha");
 });
 
-botao.addEventListener("click", function () {
+form?.addEventListener("submit", function (evento) {
+    evento.preventDefault();
 
-    localStorage.setItem("usuario", usuario.value);
+    feedback.textContent = "";
+    feedback.classList.remove("auth-feedback--ok");
 
-    localStorage.setItem("senha", senha.value);
+    if (senha.value !== confirmarSenha.value) {
+        feedback.textContent = "As senhas nao conferem.";
+        return;
+    }
 
-    localStorage.setItem("logado", "true");
+    const resultado = window.TruckwayAuth.cadastrar({
+        nome: nome.value,
+        usuario: usuario.value,
+        email: email.value,
+        senha: senha.value,
+    });
 
-    alert("Conta criada!");
+    if (!resultado.ok) {
+        feedback.textContent = resultado.mensagem;
+        return;
+    }
 
-    window.location.href = "../index.html";
+    feedback.textContent = "Conta criada. Redirecionando...";
+    feedback.classList.add("auth-feedback--ok");
 
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 600);
 });
