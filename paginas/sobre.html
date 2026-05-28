@@ -1,3 +1,97 @@
-<h1> teste de sobre</h1>
-<p> Este é um teste de sobre para verificar se a paginação esta funcionando corretamente. </p>
-<p> Se você está vendo esta mensagem, então a paginação está funcionando! </p>
+<section class="sobre" aria-labelledby="sobre-titulo">
+  <header class="sobre__hero">
+    <div class="sobre__hero-conteudo">
+      <p class="sobre__etiqueta">FETIN 2026</p>
+      <h1 id="sobre-titulo">Sobre o Truckway</h1>
+      <p>
+        O Truckway e um projeto em formato de aplicativo web para ajudar
+        caminhoneiros a planejar rotas mais seguras, encontrar pontos de apoio,
+        consultar balancas e compartilhar avaliacoes da estrada.
+      </p>
+    </div>
+
+    <div class="sobre__marca" aria-hidden="true">
+      <span>TW</span>
+    </div>
+  </header>
+
+  <section class="sobre__secao" aria-labelledby="sobre-mvp">
+    <h2 id="sobre-mvp">Objetivo do MVP</h2>
+    <p>
+      A primeira versao do Truckway busca entregar uma base simples, funcional
+      e bem organizada, sem frameworks, para que a equipe consiga evoluir o
+      projeto aos poucos.
+    </p>
+
+    <div class="sobre__grade">
+      <article class="sobre-card">
+        <span class="sobre-card__icone" aria-hidden="true">01</span>
+        <h3>Rotas seguras</h3>
+        <p>Planejamento de caminho considerando necessidades de caminhoes.</p>
+      </article>
+
+      <article class="sobre-card">
+        <span class="sobre-card__icone" aria-hidden="true">02</span>
+        <h3>Pontos de apoio</h3>
+        <p>Consulta de postos, paradas, servicos e locais uteis na viagem.</p>
+      </article>
+
+      <article class="sobre-card">
+        <span class="sobre-card__icone" aria-hidden="true">03</span>
+        <h3>Avaliacoes</h3>
+        <p>Informacoes compartilhadas por motoristas para apoiar decisoes.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sobre__secao" aria-labelledby="sobre-funciona">
+    <h2 id="sobre-funciona">Como o projeto funciona</h2>
+    <div class="sobre__lista">
+      <div class="sobre-item">
+        <strong>Layout fixo</strong>
+        <span>O index.html mantem cabecalho, menu lateral, conteudo central e barra inferior.</span>
+      </div>
+
+      <div class="sobre-item">
+        <strong>Paginas separadas</strong>
+        <span>As telas ficam na pasta paginas/ e sao carregadas dinamicamente por JavaScript.</span>
+      </div>
+
+      <div class="sobre-item">
+        <strong>Estrutura PWA</strong>
+        <span>O manifest.json e o service-worker.js preparam o projeto para comportamento de app.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sobre__secao" aria-labelledby="sobre-recursos">
+    <h2 id="sobre-recursos">Recursos principais</h2>
+    <ul class="sobre__recursos">
+      <li>Planejamento de rota para diferentes tipos de caminhao.</li>
+      <li>Mapa com visualizacao de pontos importantes da viagem.</li>
+      <li>Consulta de pontos de apoio, balancas e servicos.</li>
+      <li>Avaliacoes feitas pela comunidade de motoristas.</li>
+      <li>Base organizada para crescer como PWA.</li>
+    </ul>
+  </section>
+
+  <section class="sobre__acoes" aria-label="Acoes da pagina sobre">
+    <button class="acao-card acao-card--primario" type="button" onclick="Roteador.ir('rota')">
+      <span class="acao-card__icone" aria-hidden="true">R</span>
+      <span class="acao-card__texto">
+        <strong>Planejar rota</strong>
+        <small>Comece escolhendo origem e destino</small>
+      </span>
+      <span class="acao-card__seta" aria-hidden="true">&rsaquo;</span>
+    </button>
+
+    <button class="acao-card" type="button" onclick="Roteador.ir('apoio')">
+      <span class="acao-card__icone" aria-hidden="true">A</span>
+      <span class="acao-card__texto">
+        <strong>Ver pontos de apoio</strong>
+        <small>Encontre locais uteis para a viagem</small>
+      </span>
+      <span class="acao-card__seta" aria-hidden="true">&rsaquo;</span>
+    </button>
+  </section>
+</section>
