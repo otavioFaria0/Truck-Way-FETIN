@@ -34,6 +34,14 @@
   };
   let _veiculoAtivo = 'toco';
 
+  const Config = window.Config || {
+    NOMINATIM_URL: 'https://nominatim.openstreetmap.org',
+    ORS_BASE_URL: 'https://api.openrouteservice.org',
+    ORS_PERFIL: 'driving-hgv',
+    ORS_API_KEY: '',
+  };
+  window.Config = window.Config || Config;
+
   function _debounce(fn, wait = 300) {
     let t = null;
     return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
@@ -314,41 +322,92 @@
   //  ROTEAMENTO ORS (HGV) — N pontos
   // ══════════════════════════════════════════
 
-  async function _chamarORS(pontos, dim) {
-    // pontos = [origem, ...waypoints válidos, destino]
-    const coordinates = pontos.map(p => [p.lon, p.lat]);
+  async function _chamarOSRM(pontos) {
+    const coordinates = pontos.map((p) => `${p.lon},${p.lat}`).join(';');
+    const url = `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson&steps=true&continue_straight=true`;
 
-    const r = await fetch(`${Config.ORS_BASE_URL}/directions/${Config.ORS_PERFIL}/geojson`, {
-      method:  'POST',
-      headers: {
-        'Authorization': Config.ORS_API_KEY,
-        'Content-Type':  'application/json',
-        'Accept':        'application/json, application/geo+json',
-      },
-      body: JSON.stringify({
-        coordinates,
-        options: {
-          vehicle_type: 'hgv',
-          profile_params: {
-            restrictions: {
-              weight: parseFloat(dim.peso),
-              height: parseFloat(dim.altura),
-              width:  parseFloat(dim.largura),
-              length: parseFloat(dim.comprimento),
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('Serviço de rotas temporariamente indisponível.');
+
+    const data = await r.json();
+    if (!data.routes?.length) throw new Error('Nenhuma rota encontrada.');
+
+    const route = data.routes[0];
+    return {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: route.geometry,
+          properties: {
+            summary: {
+              distance: route.distance,
+              duration: route.duration,
             },
+            segments: (route.legs || []).map((leg) => ({
+              steps: (leg.steps || []).map((step) => ({
+                instruction: _formatOSRMStep(step),
+                distance: step.distance,
+                duration: step.duration,
+                type: step.maneuver?.type || 0,
+              })),
+            })),
           },
         },
-        instructions: true,            // ← ativado para navegação turn-by-turn
-        instructions_format: 'text',
-        language: 'pt',
-      }),
-    });
+      ],
+    };
+  }
 
-    if (!r.ok) {
-      const err = await r.json().catch(() => ({}));
-      throw new Error(err?.error?.message || `Erro ${r.status}`);
+  function _formatOSRMStep(step) {
+    const maneuver = step.maneuver || {};
+    const name = step.name ? ` ${step.name}` : '';
+    const modifier = maneuver.modifier ? ` ${maneuver.modifier}` : '';
+    return `${maneuver.type || 'Continue'}${modifier}${name}`.trim();
+  }
+
+  async function _chamarORS(pontos, dim) {
+    if (!Config.ORS_API_KEY) {
+      return _chamarOSRM(pontos);
     }
-    return r.json();
+
+    const coordinates = pontos.map(p => [p.lon, p.lat]);
+
+    try {
+      const r = await fetch(`${Config.ORS_BASE_URL}/directions/${Config.ORS_PERFIL}/geojson`, {
+        method:  'POST',
+        headers: {
+          'Authorization': Config.ORS_API_KEY,
+          'Content-Type':  'application/json',
+          'Accept':        'application/json, application/geo+json',
+        },
+        body: JSON.stringify({
+          coordinates,
+          options: {
+            vehicle_type: 'hgv',
+            profile_params: {
+              restrictions: {
+                weight: parseFloat(dim.peso),
+                height: parseFloat(dim.altura),
+                width:  parseFloat(dim.largura),
+                length: parseFloat(dim.comprimento),
+              },
+            },
+          },
+          instructions: true,            // ← ativado para navegação turn-by-turn
+          instructions_format: 'text',
+          language: 'pt',
+        }),
+      });
+
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `Erro ${r.status}`);
+      }
+      return r.json();
+    } catch (error) {
+      console.warn('[Rota] ORS falhou, usando fallback OSRM', error);
+      return _chamarOSRM(pontos);
+    }
   }
 
   async function _onCalcular() {
