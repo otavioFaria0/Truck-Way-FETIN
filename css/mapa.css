@@ -100,6 +100,12 @@
   background: #f9fbff;
 }
 
+.mapa-controle svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
 .mapa-controle:active {
   transform: translateY(0);
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);

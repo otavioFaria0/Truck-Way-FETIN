@@ -339,9 +339,10 @@
     document.querySelector('.mapa-wrapper')?.classList.toggle('mapa-wrapper--noite', _modoNoturno);
 
     const btn = document.getElementById('btn-modo-noturno');
-    if (btn) btn.textContent = _modoNoturno ? '☀️' : '🌙';
+    if (btn) {
+      btn.textContent = _modoNoturno ? '☀️' : '🌙';
+    }
   }
-
   function _adicionarBotaoModoNoturno() {
     if (!_mapa) return;
 
@@ -351,8 +352,8 @@
     btn.id = 'btn-modo-noturno';
     btn.className = 'mapa-controle mapa-controle--modo';
     btn.type = 'button';
-    btn.textContent = _modoNoturno ? '☀️' : '🌙';
     btn.title = 'Alternar modo noturno';
+    btn.textContent = _modoNoturno ? '☀️' : '🌙';
     btn.style.position = 'absolute';
     btn.style.bottom = '100px';
     btn.style.right = '10px';
@@ -373,12 +374,7 @@
     btn.className = 'mapa-controle mapa-controle--centralizar';
     btn.type = 'button';
     btn.title = 'Centralizar na minha posição';
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="display:block;">
-        <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07-7.07l-1.41 1.41M7.34 16.66l-1.41 1.41m0-11.32l1.41 1.41M16.66 16.66l1.41 1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
-      </svg>
-    `;
+    btn.textContent = '📍';
     btn.style.position = 'absolute';
     btn.style.bottom = '156px';
     btn.style.right = '10px';
