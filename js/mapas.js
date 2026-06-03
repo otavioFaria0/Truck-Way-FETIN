@@ -319,7 +319,7 @@
   function _detectarModoNoturno() {
     const preferDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
     const hora = new Date().getHours();
-    _modoNoturno = preferDark || hora >= 18 || hora < 6;
+    _modoNoturno =  hora >= 18 || hora < 6 || preferDark;
   }
 
   function _alternarModoNoturno() {
@@ -345,17 +345,17 @@
   function _adicionarBotaoModoNoturno() {
     if (!_mapa) return;
 
+    document.getElementById('btn-modo-noturno')?.remove();
+
     const btn = document.createElement('button');
     btn.id = 'btn-modo-noturno';
+    btn.className = 'mapa-controle mapa-controle--modo';
     btn.type = 'button';
     btn.textContent = _modoNoturno ? '☀️' : '🌙';
     btn.title = 'Alternar modo noturno';
-    btn.style.cssText = `
-      position:absolute; bottom:100px; right:10px; z-index:1000;
-      width:36px; height:36px; border-radius:8px; border:2px solid rgba(0,0,0,0.2);
-      background:#fff; font-size:18px; cursor:pointer; display:flex;
-      align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.15);
-    `;
+    btn.style.position = 'absolute';
+    btn.style.bottom = '100px';
+    btn.style.right = '10px';
     btn.addEventListener('click', _alternarModoNoturno);
     document.querySelector('.mapa-wrapper')?.appendChild(btn);
   }
@@ -363,22 +363,41 @@
   function _adicionarBotaoCentralizar() {
     if (!_mapa) return;
 
+    const wrapper = document.querySelector('.mapa-wrapper');
+    if (!wrapper) return;
+
+    document.getElementById('btn-centralizar')?.remove();
+
     const btn = document.createElement('button');
+    btn.id = 'btn-centralizar';
+    btn.className = 'mapa-controle mapa-controle--centralizar';
     btn.type = 'button';
-    btn.textContent = '📍';
     btn.title = 'Centralizar na minha posição';
-    btn.style.cssText = `
-      position:absolute; bottom:148px; right:10px; z-index:1000;
-      width:36px; height:36px; border-radius:8px; border:2px solid rgba(0,0,0,0.2);
-      background:#fff; font-size:18px; cursor:pointer; display:flex;
-      align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="display:block;">
+        <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07-7.07l-1.41 1.41M7.34 16.66l-1.41 1.41m0-11.32l1.41 1.41M16.66 16.66l1.41 1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+      </svg>
     `;
+    btn.style.position = 'absolute';
+    btn.style.bottom = '156px';
+    btn.style.right = '10px';
     btn.addEventListener('click', () => {
-      if (_posicaoAtual && _mapa) {
-        _mapa.flyTo([_posicaoAtual.lat, _posicaoAtual.lon], 15, { animate: true, duration: 1 });
+      if (!_mapa) return;
+
+      const alvo = _posicaoAtual
+        ? [_posicaoAtual.lat, _posicaoAtual.lon]
+        : (_markerUsuario ? _markerUsuario.getLatLng() : null);
+
+      if (alvo) {
+        _mapa.flyTo(alvo, 15, { animate: true, duration: 0.8 });
+        return;
       }
+
+      _exibirToast('Aguardando posição do GPS. Por favor, permita a localização.');
     });
-    document.querySelector('.mapa-wrapper')?.appendChild(btn);
+
+    wrapper.appendChild(btn);
   }
 
   // ══════════════════════════════════════════

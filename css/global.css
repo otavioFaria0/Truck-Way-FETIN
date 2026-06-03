@@ -85,6 +85,19 @@ a {
 }
 
 /* =========================
+    LOGO
+========================= */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 25%;
+}
+
+/* =========================
    BOTÕES DE ÍCONE
 ========================= */
 .botao-icone {
