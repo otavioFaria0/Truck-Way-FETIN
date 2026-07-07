@@ -15,7 +15,13 @@
   // ─────────────────────────────────────────
   let _mapa          = null;
   let _camadaPOI     = null;
+  let _camadaBloqueios = null; // camada para vias bloqueadas
+  let _bloqueios = [];        // array de features GeoJSON (LineString/Polygon)
   let _mapaPreview   = null;
+  let _drawBloqueioPendente = false;
+  let _mapaProntoPromise = null;
+  let _mapaProntoResolve = null;
+  let _mapaPronto = false;
   let _watchId       = null;          // ID do watchPosition
   let _markerUsuario = null;          // marker do caminhão (atualizado em tempo real)
   let _posicaoAtual  = null;          // { lat, lon } mais recente
@@ -101,9 +107,170 @@
     setTimeout(() => { if (_mapa) _mapa.invalidateSize(); }, 200);
 
     _adicionarPOIs();
+    // carregar e desenhar bloqueios salvos
+    _carregarBloqueios();
     _adicionarBotaoModoNoturno();
     _adicionarBotaoCentralizar();
+    if (_mapaProntoResolve) {
+      _mapaPronto = true;
+      window.TruckwayMapaProntoStatus = true;
+      _mapaProntoResolve();
+      _mapaProntoResolve = null;
+    }
+    if (_drawBloqueioPendente) {
+      _drawBloqueioPendente = false;
+      window.TruckwayBloqueioPendente = false;
+      _exibirToast('Mapa pronto — iniciando modo de desenho.');
+      _startDrawBloqueio();
+    }
   }
+
+  function _salvarBloqueios() {
+    try { localStorage.setItem('truckway_bloqueios', JSON.stringify(_bloqueios || [])); } catch (e) { /* ignore */ }
+    // expõe versão atual para roteamento
+    window.TruckwayBloqueiosGeoJSON = { type: 'FeatureCollection', features: _bloqueios || [] };
+  }
+
+  function _resetMapaProntoPromise() {
+    _mapaPronto = false;
+    _mapaProntoPromise = new Promise((resolve) => { _mapaProntoResolve = resolve; });
+    window.TruckwayMapaPronto = _mapaProntoPromise;
+    window.TruckwayMapaProntoStatus = false;
+  }
+
+  function _aguardarMapaPronto() {
+    if (!_mapaProntoPromise) _resetMapaProntoPromise();
+    return _mapaProntoPromise;
+  }
+
+  function _carregarBloqueios() {
+    try {
+      const raw = localStorage.getItem('truckway_bloqueios');
+      _bloqueios = raw ? JSON.parse(raw) : [];
+    } catch (e) { _bloqueios = []; }
+    _desenharBloqueios();
+    window.TruckwayBloqueiosGeoJSON = { type: 'FeatureCollection', features: _bloqueios || [] };
+  }
+
+  function _desenharBloqueios() {
+    if (!_mapa) return;
+    if (!_camadaBloqueios) _camadaBloqueios = L.layerGroup().addTo(_mapa);
+    _camadaBloqueios.clearLayers();
+
+    (_bloqueios || []).forEach((feat, idx) => {
+      try {
+        if (feat?.type === 'Feature' && feat.geometry?.type === 'LineString') {
+          const coords = feat.geometry.coordinates.map(c => [c[1], c[0]]);
+          const poly = L.polyline(coords, { color: '#d33', weight: 6, opacity: 0.85 }).addTo(_camadaBloqueios);
+          poly.bindPopup(`<div style="min-width:160px"><strong>Via bloqueada</strong><div style="margin-top:8px"><button data-idx="${idx}" class="remover-bloqueio-btn">Remover bloqueio</button></div></div>`);
+          poly.on('popupopen', (ev) => {
+            const el = ev.popup._contentNode.querySelector('.remover-bloqueio-btn');
+            if (el) el.addEventListener('click', () => { window.TruckwayRemoverBloqueio(idx); ev.popup._close(); });
+          });
+        } else if (feat?.type === 'Feature' && feat.geometry?.type === 'Polygon') {
+          const coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+          const poly = L.polygon(coords, { color: '#d33', weight: 2, fillColor: 'rgba(211,33,33,0.2)', opacity: 0.9 }).addTo(_camadaBloqueios);
+          poly.bindPopup(`<div style="min-width:160px"><strong>Área bloqueada</strong><div style="margin-top:8px"><button data-idx="${idx}" class="remover-bloqueio-btn">Remover bloqueio</button></div></div>`);
+          poly.on('popupopen', (ev) => {
+            const el = ev.popup._contentNode.querySelector('.remover-bloqueio-btn');
+            if (el) el.addEventListener('click', () => { window.TruckwayRemoverBloqueio(idx); ev.popup._close(); });
+          });
+        }
+      } catch (e) { console.warn('Erro desenhando bloqueio', e); }
+    });
+  }
+
+  // Adiciona um bloqueio (feature GeoJSON) e redesenha
+  function _adicionarBloqueio(feature) {
+    if (!feature) return;
+    if (feature.type !== 'Feature') feature = { type: 'Feature', geometry: feature };
+    feature.properties = feature.properties || {};
+    feature.id = feature.id || String(Date.now());
+    _bloqueios.push(feature);
+    _salvarBloqueios();
+    _desenharBloqueios();
+    _exibirToast('Bloqueio adicionado.');
+  }
+
+  function _removerBloqueioByIndex(idx) {
+    if (typeof idx !== 'number') return;
+    _bloqueios.splice(idx, 1);
+    _salvarBloqueios();
+    _desenharBloqueios();
+    _exibirToast('Bloqueio removido.');
+  }
+
+  // Inicia modo de desenho simples: clique para adicionar pontos, botão Finish para concluir
+  function _startDrawBloqueio() {
+    if (!_mapa) {
+      _drawBloqueioPendente = true;
+      window.TruckwayBloqueioPendente = true;
+      _exibirToast('Aguarde o mapa carregar para iniciar o desenho...');
+      return;
+    }
+
+    const wrapper = document.querySelector('.mapa-wrapper') || document.body;
+    _exibirToast('Modo desenho: clique no mapa para marcar a via. Use "Concluir" para salvar.');
+
+    let pontos = [];
+    let tempLayer = null;
+
+    function onMapClick(e) {
+      pontos.push([e.latlng.lat, e.latlng.lng]);
+      if (tempLayer) _mapa.removeLayer(tempLayer);
+      tempLayer = L.polyline(pontos.map(p => [p[0], p[1]]), { color: '#f55', weight: 4, dashArray: '6 6' }).addTo(_mapa);
+    }
+
+    function finish() {
+      _mapa.off('click', onMapClick);
+      finishBtn.remove(); cancelBtn.remove(); info.remove();
+      if (tempLayer) { tempLayer.remove(); tempLayer = null; }
+      if (pontos.length < 2) { _exibirToast('Desenho cancelado: marque pelo menos dois pontos.'); return; }
+      const coords = pontos.map(p => [p[1], p[0]]); // [lon,lat]
+      const feat = { type: 'Feature', geometry: { type: 'LineString', coordinates: coords }, properties: { via_bloqueada: true } };
+      _adicionarBloqueio(feat);
+    }
+
+    function cancel() {
+      _mapa.off('click', onMapClick);
+      finishBtn.remove(); cancelBtn.remove(); info.remove();
+      if (tempLayer) { tempLayer.remove(); tempLayer = null; }
+      _exibirToast('Desenho cancelado.');
+    }
+
+    const info = document.createElement('div');
+    info.className = 'mapa-controle mapa-controle--info';
+    info.style.position = 'absolute'; info.style.top = '14px'; info.style.left = '10px';
+    info.style.zIndex = 2200; info.style.padding = '8px 10px'; info.style.background = '#fff'; info.style.borderRadius = '8px';
+    info.textContent = 'Desenho ativo — clique no mapa para adicionar pontos';
+    wrapper.appendChild(info);
+
+    const finishBtn = document.createElement('button');
+    finishBtn.className = 'mapa-controle';
+    finishBtn.textContent = 'Concluir';
+    finishBtn.style.position = 'absolute'; finishBtn.style.top = '14px'; finishBtn.style.right = '10px'; finishBtn.style.zIndex = 2200;
+    finishBtn.addEventListener('click', finish);
+    wrapper.appendChild(finishBtn);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'mapa-controle';
+    cancelBtn.textContent = 'Cancelar';
+    cancelBtn.style.position = 'absolute'; cancelBtn.style.top = '56px'; cancelBtn.style.right = '10px'; cancelBtn.style.zIndex = 2200;
+    cancelBtn.addEventListener('click', cancel);
+    wrapper.appendChild(cancelBtn);
+
+    _mapa.on('click', onMapClick);
+  }
+
+  // Expor funções globais para outros módulos
+  window.TruckwayAdicionarBloqueio = (feature) => _adicionarBloqueio(feature);
+  window.TruckwayRemoverBloqueio = (idOrIdx) => {
+    if (typeof idOrIdx === 'number') return _removerBloqueioByIndex(idOrIdx);
+    const idx = _bloqueios.findIndex(b => String(b.id) === String(idOrIdx));
+    if (idx >= 0) return _removerBloqueioByIndex(idx);
+  };
+  window.TruckwayStartDrawBloqueio = () => _startDrawBloqueio();
+  _resetMapaProntoPromise();
 
   // ══════════════════════════════════════════
   //  ÍCONE DO CAMINHÃO (rotaciona com heading)
@@ -224,6 +391,18 @@
     if (window.TruckwayNavegando) {
       _mapa.setView(novasCoords, _mapa.getZoom(), { animate: true, duration: 0.5 });
     }
+
+    // Se o usuário optou por acompanhar a posição e há callback de recalcular, chama quando mover o suficiente
+    try {
+      if (window.TruckwayFollowPosition && typeof window.TruckwayRecalcularRota === 'function') {
+        const last = window._truckwayLastFollowPos || null;
+        const moved = last ? _calcularDistancia(lat, lon, last.lat, last.lon) : Infinity;
+        if (moved === Infinity || moved > 30) { // >30m
+          window._truckwayLastFollowPos = { lat, lon, ts: Date.now() };
+          try { window.TruckwayRecalcularRota({ lat, lon }); } catch (e) { console.warn('[Truckway] Recalcular falhou', e); }
+        }
+      }
+    } catch (e) { /* silencioso */ }
   }
 
   // ══════════════════════════════════════════
@@ -550,6 +729,7 @@
   function _hookMapa() {
     _alertadosPOI.clear();
     _detectarModoNoturno();
+    _resetMapaProntoPromise();
     _inicializarComGeolocalizacao();
     _inicializarBusca();
     _observarRemocao();

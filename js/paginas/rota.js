@@ -72,12 +72,32 @@
     }).addTo(_mapa);
 
     _camadaRota = L.layerGroup().addTo(_mapa);
+    // camada para desenhar bloqueios salvos
+    _camadaBloqueiosRota = L.layerGroup().addTo(_mapa);
 
     if (window.TruckwayEstado?.rotaGeoJSON) {
       setTimeout(() => { _mapa.invalidateSize(); _desenharRota(); }, 300);
     } else {
       setTimeout(() => _mapa.invalidateSize(), 300);
     }
+  }
+
+  function _desenharBloqueiosRota() {
+    if (!_mapa) return;
+    if (!_camadaBloqueiosRota) _camadaBloqueiosRota = L.layerGroup().addTo(_mapa);
+    _camadaBloqueiosRota.clearLayers();
+    const bloqueios = window.TruckwayBloqueiosGeoJSON?.features || [];
+    bloqueios.forEach((feat) => {
+      try {
+        if (feat.geometry?.type === 'LineString') {
+          const coords = feat.geometry.coordinates.map(c => [c[1], c[0]]);
+          L.polyline(coords, { color: '#d33', weight: 6, opacity: 0.9 }).addTo(_camadaBloqueiosRota);
+        } else if (feat.geometry?.type === 'Polygon') {
+          const coords = feat.geometry.coordinates[0].map(c => [c[1], c[0]]);
+          L.polygon(coords, { color: '#d33', fillColor: 'rgba(211,33,33,0.18)', weight:2 }).addTo(_camadaBloqueiosRota);
+        }
+      } catch (e) { console.warn('[Rota] erro desenhando bloqueio', e); }
+    });
   }
 
   function _destruirMapa() {
@@ -191,12 +211,14 @@
     const posAtual = window.TruckwayPosicaoAtual;
     if (posAtual) {
       _aplicarMinhaLocalizacao(posAtual.lat, posAtual.lon, btn);
+      try { window.TruckwayFollowPosition = true; } catch (e) {}
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         _aplicarMinhaLocalizacao(latitude, longitude, btn);
+        try { window.TruckwayFollowPosition = true; } catch (e) {}
       },
       () => {
         alert('Não foi possível obter sua localização.');
@@ -373,6 +395,29 @@
     const coordinates = pontos.map(p => [p.lon, p.lat]);
 
     try {
+      // se houver bloqueios definidos no mapa, adiciona como avoid_polygons
+      const bloqueios = window.TruckwayBloqueiosGeoJSON || null;
+      const body = {
+        coordinates,
+        options: {
+          vehicle_type: 'hgv',
+          profile_params: {
+            restrictions: {
+              weight: parseFloat(dim.peso),
+              height: parseFloat(dim.altura),
+              width:  parseFloat(dim.largura),
+              length: parseFloat(dim.comprimento),
+            },
+          },
+        },
+        instructions: true,
+        instructions_format: 'text',
+        language: 'pt',
+      };
+      if (bloqueios && bloqueios.features && bloqueios.features.length) {
+        body.options.avoid_polygons = bloqueios;
+      }
+
       const r = await fetch(`${Config.ORS_BASE_URL}/directions/${Config.ORS_PERFIL}/geojson`, {
         method:  'POST',
         headers: {
@@ -380,23 +425,7 @@
           'Content-Type':  'application/json',
           'Accept':        'application/json, application/geo+json',
         },
-        body: JSON.stringify({
-          coordinates,
-          options: {
-            vehicle_type: 'hgv',
-            profile_params: {
-              restrictions: {
-                weight: parseFloat(dim.peso),
-                height: parseFloat(dim.altura),
-                width:  parseFloat(dim.largura),
-                length: parseFloat(dim.comprimento),
-              },
-            },
-          },
-          instructions: true,            // ← ativado para navegação turn-by-turn
-          instructions_format: 'text',
-          language: 'pt',
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!r.ok) {
@@ -426,6 +455,15 @@
       ..._waypointsCoords.filter(Boolean),
       _destinoCoords,
     ];
+
+    // Se houver bloqueios definidos e não houver ORS API key, avisa o usuário
+    try {
+      const bloqueios = window.TruckwayBloqueiosGeoJSON?.features || [];
+      if (bloqueios.length && !Config.ORS_API_KEY) {
+        _mostrarErro('Existem trechos bloqueados marcados — para que o roteamento os evite automaticamente, configure uma chave ORS em `Config.ORS_API_KEY`.');
+        return;
+      }
+    } catch (e) { /* silencioso */ }
 
     try {
       const geojson = await _chamarORS(pontosValidos, _dimAtual);
@@ -489,6 +527,14 @@
     window.TruckwayNavegando = true; // mapas.js usa isso para centralizar o mapa
     _instrucaoAtual = 0;
 
+    // Atualiza botão iniciar -> parar
+    const btnNav = document.getElementById('btn-iniciar-nav');
+    if (btnNav) {
+      btnNav.textContent = '⏹ Parar Navegação';
+      btnNav.removeEventListener('click', _iniciarNavegacao);
+      btnNav.addEventListener('click', _pararNavegacao);
+    }
+
     _mostrarPainelNavegacao();
     _atualizarInstrucao();
 
@@ -502,6 +548,17 @@
     _modoNavegando = false;
     window.TruckwayNavegando = false;
     _esconderPainelNavegacao();
+
+    // Desativa acompanhamento de posição ao parar
+    try { window.TruckwayFollowPosition = false; } catch (e) {}
+
+    // Restaura botão iniciar
+    const btnNav = document.getElementById('btn-iniciar-nav');
+    if (btnNav) {
+      btnNav.textContent = '🧭 Iniciar Navegação';
+      btnNav.removeEventListener('click', _pararNavegacao);
+      btnNav.addEventListener('click', _iniciarNavegacao);
+    }
   }
 
   function _mostrarPainelNavegacao() {
@@ -851,6 +908,9 @@
 
   function _hookRota() {
     _inicializarMapa();
+    // desenha bloqueios existentes e atualiza periodicamente
+    try { _desenharBloqueiosRota(); } catch(e){}
+    const _bloqInterval = setInterval(() => { try { _desenharBloqueiosRota(); } catch(e){} }, 2000);
     _inicializarPainelMinimizado();
     _inicializarVeiculos();
     _inicializarTrocar();
@@ -913,6 +973,8 @@
       _instrucoes = estado.instrucoes || [];
       _mostrarResultado(estado.resumo);
     }
+    // limpa interval quando sair da aba (observer fará _destruirMapa que pode limpar camadas)
+    // não guardamos referência global adicional; interval será coletado ao recarregar a aba
   }
 
 
