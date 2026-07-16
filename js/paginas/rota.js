@@ -16,6 +16,10 @@
   let _camadaRota       = null;
   let _origemCoords     = null;
   let _destinoCoords    = null;
+
+  let _camadaBloqueiosRota = null;
+  let _bloqInterval = null;
+
   let _waypointsCoords  = [];   // array de paradas intermediárias [{lat,lon,nome}]
   let _instrucoes       = [];   // array de steps retornados pelo ORS
   let _instrucaoAtual   = 0;    // índice da instrução sendo exibida
@@ -101,6 +105,10 @@
   }
 
   function _destruirMapa() {
+    if (_bloqInterval) {
+      clearInterval(_bloqInterval);
+      _bloqInterval = null;
+    }
     if (_mapa) { _mapa.remove(); _mapa = null; _camadaRota = null; }
     _pararNavegacao();
   }
@@ -110,41 +118,72 @@
   //  DESENHAR ROTA NO MAPA
   // ══════════════════════════════════════════
 
-  function _desenharRota() {
+   function _desenharRota() {
     const estado = window.TruckwayEstado;
     if (!_mapa || !estado?.rotaGeoJSON) return;
 
     _camadaRota.clearLayers();
 
-    // Linha azul da rota
+    // Rota original (tracejada), só quando houve desvio
+    if (estado.avisoBloqueio && estado.rotaOriginalGeoJSON) {
+      L.geoJSON(estado.rotaOriginalGeoJSON, {
+        style: {
+          color: '#94a3b8',
+          weight: 4,
+          opacity: 0.65,
+          dashArray: '8 8',
+          lineJoin: 'round',
+          lineCap: 'round',
+        },
+      }).addTo(_camadaRota);
+    }
+
+    // Rota final
     L.geoJSON(estado.rotaGeoJSON, {
-      style: { color: '#0c61eb', weight: 5, opacity: 0.9, lineJoin: 'round', lineCap: 'round' },
+      style: {
+        color: '#0c61eb',
+        weight: 5,
+        opacity: 0.95,
+        lineJoin: 'round',
+        lineCap: 'round',
+      },
     }).addTo(_camadaRota);
 
-    // Pin A (origem)
     _adicionarPin(_origemCoords, 'A', 'pin-rota--a', 'Origem');
 
-    // Pins intermediários (C, D, E…)
     const letras = ['C', 'D', 'E', 'F', 'G'];
     _waypointsCoords.forEach((wp, i) => {
       _adicionarPin(wp, letras[i] || String(i + 3), 'pin-rota--wp', `Parada ${i + 1}`);
     });
 
-    // Pin B (destino)
     _adicionarPin(_destinoCoords, 'B', 'pin-rota--b', 'Destino');
 
     const bounds = L.geoJSON(estado.rotaGeoJSON).getBounds();
+    if (estado.avisoBloqueio && estado.rotaOriginalGeoJSON) {
+      bounds.extend(L.geoJSON(estado.rotaOriginalGeoJSON).getBounds());
+    }
+
     _mapa.fitBounds(bounds, { padding: [60, 60], animate: true });
   }
 
   function _adicionarPin(coords, letra, classe, titulo) {
-    if (!coords) return;
-    L.marker(
-      [coords.lat, coords.lon],
-      { icon: L.divIcon({ className: '', html: `<div class="pin-rota ${classe}">${letra}</div>`, iconSize: [28, 28], iconAnchor: [14, 14] }) }
-    ).addTo(_camadaRota).bindPopup(`<b>${titulo}</b><br>${coords.nome?.split(',')[0] || ''}`);
-  }
+  if (!_camadaRota || !coords) return;
 
+  const icone = L.divIcon({
+    className: '',
+    html: `
+      <div class="pin-rota ${classe}" style="transform: translate(0, 0);">
+        ${letra}
+      </div>
+    `,
+    iconSize: [0, 0],
+    iconAnchor: [0, 0],
+  });
+
+  L.marker([coords.lat, coords.lon], { icon: icone, riseOnHover: true })
+    .addTo(_camadaRota)
+    .bindTooltip(titulo, { direction: 'top', offset: [0, -8], opacity: 0.95 });
+}
 
   // ══════════════════════════════════════════
   //  GEOCODING (Nominatim)
@@ -387,16 +426,145 @@
     return `${maneuver.type || 'Continue'}${modifier}${name}`.trim();
   }
 
-  async function _chamarORS(pontos, dim) {
+    // ══════════════════════════════════════════
+  //  BLOQUEIOS — interseção e conversão para ORS
+  // ══════════════════════════════════════════
+
+  const RAIO_INTERSECCAO_BLOQUEIO_M = 25;
+
+  function _calcularDistanciaRota(lat1, lon1, lat2, lon2) {
+    const R = 6371000;
+    const φ1 = lat1 * Math.PI / 180, φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function _distanciaPontoSegmentoRota(latP, lonP, latA, lonA, latB, lonB) {
+    const x1 = lonA, y1 = latA;
+    const x2 = lonB, y2 = latB;
+    const px = lonP, py = latP;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const lenSq = dx * dx + dy * dy;
+
+    if (lenSq === 0) {
+      return _calcularDistanciaRota(py, px, y1, x1);
+    }
+
+    let t = ((px - x1) * dx + (py - y1) * dy) / lenSq;
+    t = Math.max(0, Math.min(1, t));
+
+    const projLon = x1 + t * dx;
+    const projLat = y1 + t * dy;
+    return _calcularDistanciaRota(py, px, projLat, projLon);
+  }
+
+  function _segmentosSeCruzam(x1, y1, x2, y2, x3, y3, x4, y4) {
+    const d = (x2 - x1) * (y4 - y3) - (y2 - y1) * (x4 - x3);
+    if (d === 0) return false;
+
+    const t = ((x3 - x1) * (y4 - y3) - (y3 - y1) * (x4 - x3)) / d;
+    const u = ((x3 - x1) * (y2 - y1) - (y3 - y1) * (x2 - x1)) / d;
+    return t >= 0 && t <= 1 && u >= 0 && u <= 1;
+  }
+
+  function _bloqueioCruzaRota(routeCoords, bloqueioFeature) {
+    const geom = bloqueioFeature?.geometry;
+    if (!geom) return false;
+
+    let aneis = [];
+    if (geom.type === 'LineString') aneis = [geom.coordinates];
+    else if (geom.type === 'Polygon') aneis = geom.coordinates;
+    else return false;
+
+    for (const bloqCoords of aneis) {
+      for (let i = 0; i < routeCoords.length - 1; i++) {
+        const [lonA, latA] = routeCoords[i];
+        const [lonB, latB] = routeCoords[i + 1];
+
+        for (let j = 0; j < bloqCoords.length - 1; j++) {
+          const [lonC, latC] = bloqCoords[j];
+          const [lonD, latD] = bloqCoords[j + 1];
+
+          if (_segmentosSeCruzam(lonA, latA, lonB, latB, lonC, latC, lonD, latD)) {
+            return true;
+          }
+
+          const dist1 = _distanciaPontoSegmentoRota(latA, lonA, latC, lonC, latD, lonD);
+          const dist2 = _distanciaPontoSegmentoRota(latB, lonB, latC, lonC, latD, lonD);
+          const dist3 = _distanciaPontoSegmentoRota(latC, lonC, latA, lonA, latB, lonB);
+          const dist4 = _distanciaPontoSegmentoRota(latD, lonD, latA, lonA, latB, lonB);
+
+          if (Math.min(dist1, dist2, dist3, dist4) <= RAIO_INTERSECCAO_BLOQUEIO_M) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  function _encontrarBloqueiosNaRota(routeGeoJSON, bloqueios) {
+    const routeCoords = routeGeoJSON?.features?.[0]?.geometry?.coordinates || [];
+    if (!routeCoords.length || !bloqueios?.length) return [];
+    return bloqueios.filter((b) => _bloqueioCruzaRota(routeCoords, b));
+  }
+
+  function _bloqueioParaPoligono(feature, margemGraus = 0.0004) {
+    const geom = feature?.geometry;
+    if (!geom) return null;
+
+    if (geom.type === 'Polygon') return feature;
+    if (geom.type !== 'LineString') return null;
+
+    const coords = geom.coordinates;
+    if (coords.length < 2) return null;
+
+    const esquerda = [];
+    const direita = [];
+
+    for (let i = 0; i < coords.length; i++) {
+      const [lon, lat] = coords[i];
+      const prev = coords[i - 1] || coords[i];
+      const next = coords[i + 1] || coords[i];
+
+      const dx = next[0] - prev[0];
+      const dy = next[1] - prev[1];
+      const len = Math.hypot(dx, dy) || 1;
+
+      const nx = -dy / len;
+      const ny = dx / len;
+
+      esquerda.push([lon + nx * margemGraus, lat + ny * margemGraus]);
+      direita.push([lon - nx * margemGraus, lat - ny * margemGraus]);
+    }
+
+    const anel = [...esquerda, ...direita.reverse()];
+    if (anel.length) anel.push(anel[0]);
+
+    return {
+      type: 'Feature',
+      properties: feature.properties || {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [anel],
+      },
+    };
+  }
+
+    async function _chamarORS(pontos, dim, avoidFeatures = null, permitirFallbackOSRM = true) {
     if (!Config.ORS_API_KEY) {
+      console.warn('[Truckway/Rota] ORS_API_KEY ausente — usando fallback OSRM.');
       return _chamarOSRM(pontos);
     }
 
-    const coordinates = pontos.map(p => [p.lon, p.lat]);
+    const coordinates = pontos.map((p) => [p.lon, p.lat]);
 
     try {
-      // se houver bloqueios definidos no mapa, adiciona como avoid_polygons
-      const bloqueios = window.TruckwayBloqueiosGeoJSON || null;
       const body = {
         coordinates,
         options: {
@@ -414,16 +582,21 @@
         instructions_format: 'text',
         language: 'pt',
       };
-      if (bloqueios && bloqueios.features && bloqueios.features.length) {
-        body.options.avoid_polygons = bloqueios;
+
+      if (avoidFeatures && avoidFeatures.length) {
+        body.options.avoid_polygons = {
+          type: 'FeatureCollection',
+          features: avoidFeatures,
+        };
+        console.log(`[Truckway/Rota] Enviando avoid_polygons ao ORS com ${avoidFeatures.length} bloqueio(s).`);
       }
 
       const r = await fetch(`${Config.ORS_BASE_URL}/directions/${Config.ORS_PERFIL}/geojson`, {
-        method:  'POST',
+        method: 'POST',
         headers: {
           'Authorization': Config.ORS_API_KEY,
-          'Content-Type':  'application/json',
-          'Accept':        'application/json, application/geo+json',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/geo+json',
         },
         body: JSON.stringify(body),
       });
@@ -432,14 +605,18 @@
         const err = await r.json().catch(() => ({}));
         throw new Error(err?.error?.message || `Erro ${r.status}`);
       }
+
       return r.json();
     } catch (error) {
-      console.warn('[Rota] ORS falhou, usando fallback OSRM', error);
+      if (!permitirFallbackOSRM) {
+        throw error;
+      }
+      console.warn('[Truckway/Rota] ORS falhou, usando fallback OSRM', error);
       return _chamarOSRM(pontos);
     }
   }
 
-  async function _onCalcular() {
+    async function _onCalcular() {
     _esconderErro();
 
     if (!_origemCoords || !_destinoCoords) {
@@ -449,28 +626,50 @@
 
     _setBotao('calculando');
 
-    // Monta lista de pontos: origem + waypoints válidos + destino
     const pontosValidos = [
       _origemCoords,
       ..._waypointsCoords.filter(Boolean),
       _destinoCoords,
     ];
 
-    // Se houver bloqueios definidos e não houver ORS API key, avisa o usuário
     try {
       const bloqueios = window.TruckwayBloqueiosGeoJSON?.features || [];
-      if (bloqueios.length && !Config.ORS_API_KEY) {
-        _mostrarErro('Existem trechos bloqueados marcados — para que o roteamento os evite automaticamente, configure uma chave ORS em `Config.ORS_API_KEY`.');
-        return;
+
+      // 1) calcula a rota base normalmente
+      const rotaBase = await _chamarORS(pontosValidos, _dimAtual);
+      const featureBase = rotaBase.features[0];
+      const resumoBase = featureBase.properties.summary;
+
+      // 2) encontra apenas os bloqueios que realmente cruzam a rota
+      const bloqueiosNaRota = _encontrarBloqueiosNaRota(rotaBase, bloqueios);
+
+      let rotaFinal = rotaBase;
+      let rotaOriginal = null;
+      let avisoBloqueio = false;
+
+      // 3) se houver cruzamento real, recalcula desviando só os bloqueios envolvidos
+      if (bloqueiosNaRota.length) {
+        const avoidFeatures = bloqueiosNaRota
+          .map(_bloqueioParaPoligono)
+          .filter(Boolean);
+
+        if (avoidFeatures.length) {
+          try {
+            rotaOriginal = rotaBase;
+            rotaFinal = await _chamarORS(pontosValidos, _dimAtual, avoidFeatures, false);
+            avisoBloqueio = true;
+          } catch (err) {
+            console.warn('[Truckway/Rota] Falha ao gerar rota desviada, mantendo rota base.', err);
+            rotaFinal = rotaBase;
+            rotaOriginal = null;
+            avisoBloqueio = false;
+          }
+        }
       }
-    } catch (e) { /* silencioso */ }
 
-    try {
-      const geojson = await _chamarORS(pontosValidos, _dimAtual);
-      const feature = geojson.features[0];
-      const resumo  = feature.properties.summary;
+      const feature = rotaFinal.features[0];
+      const resumo = feature.properties.summary;
 
-      // Extrai instruções (steps) de todos os trechos
       _instrucoes = [];
       const segmentos = feature.properties.segments || [];
       segmentos.forEach((seg) => {
@@ -478,33 +677,33 @@
           _instrucoes.push({
             instrucao: step.instruction || '',
             distancia: step.distance,
-            duracao:   step.duration,
-            tipo:      step.type,
+            duracao: step.duration,
+            tipo: step.type,
           });
         });
       });
       _instrucaoAtual = 0;
 
       window.TruckwayEstado = {
-        rotaGeoJSON:   geojson,
+        rotaGeoJSON: rotaFinal,
+        rotaOriginalGeoJSON: rotaOriginal,
         resumo,
-        instrucoes:    _instrucoes,
-        origemCoords:  _origemCoords,
+        instrucoes: _instrucoes,
+        origemCoords: _origemCoords,
         destinoCoords: _destinoCoords,
-        waypoints:     _waypointsCoords.filter(Boolean),
+        waypoints: _waypointsCoords.filter(Boolean),
+        avisoBloqueio,
       };
 
       _desenharRota();
       _mostrarResultado(resumo);
       _setBotao('idle');
 
-      // Registra callback de rerouting no namespace global
       window.TruckwayRecalcularRota = async (novaPosicao) => {
         if (!novaPosicao) return;
         _origemCoords = { lat: novaPosicao.lat, lon: novaPosicao.lon, nome: 'Posição atual' };
         await _onCalcular();
       };
-
     } catch (e) {
       console.error('[Rota]', e);
       _mostrarErro(e.message);
@@ -910,7 +1109,7 @@
     _inicializarMapa();
     // desenha bloqueios existentes e atualiza periodicamente
     try { _desenharBloqueiosRota(); } catch(e){}
-    const _bloqInterval = setInterval(() => { try { _desenharBloqueiosRota(); } catch(e){} }, 2000);
+    _bloqInterval = setInterval(() => { try { _desenharBloqueiosRota(); } catch(e){} }, 2000);
     _inicializarPainelMinimizado();
     _inicializarVeiculos();
     _inicializarTrocar();
